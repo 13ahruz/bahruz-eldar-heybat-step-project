@@ -1,4 +1,7 @@
-package java.az.edu.turing.stepProjBookingApp;
+package az.edu.turing.stepProjBookingApp;
 
 public class BookingApp {
+    public static void main(String[] args) {
+
+    }
 }
