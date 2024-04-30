@@ -55,6 +55,6 @@ public class FlightEntity {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("date=").append(date).append(", time=").append(time).append(", destination='").append(destination).append('\'').append(", seats=").append(seats).append(", flightsId=").append(flightsId).append('}').toString();
+        return "date=%d, time=%d, destination='%s', seats=%d, flightsId=%d}".formatted(date, time, destination, seats, flightsId);
     }
 }

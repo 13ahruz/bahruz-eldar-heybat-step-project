@@ -36,6 +36,7 @@ public class FlightFileDao extends FlightDao {
     @Override
     public Collection<FlightEntity> getAllFlights (){
         final Path path = Paths.get(FLIGHT_FILE_PATH);
+
         return null;
     }
 
