@@ -12,6 +12,4 @@ public interface DAO<T> {
     Optional <T> getFlightBy (Predicate <T> predicate);
     Collection <T> getFlightsBy (Predicate <T> predicate);
     boolean cancelFlightBy (Predicate <T> predicate);
-
-
 }
