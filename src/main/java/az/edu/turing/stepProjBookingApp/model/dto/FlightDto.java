@@ -33,7 +33,7 @@ public class FlightDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return false;//
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightDto flightDto = (FlightDto) o;
         return date == flightDto.date && time == flightDto.time && seats == flightDto.seats && destination.equals(flightDto.destination);
