@@ -48,6 +48,5 @@ public class FlightDto {
     public String toString() {
         return "date=%d, time=%d, destination='%s', seats=%d}"
                 .formatted(date, time, destination, seats);
-
     }
 }
