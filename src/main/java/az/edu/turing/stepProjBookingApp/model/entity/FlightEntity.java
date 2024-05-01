@@ -16,12 +16,12 @@ public class FlightEntity {
         this.seats = seats;
     }
 
-    public FlightEntity(int date, int time, String destination, int seats, int flightsId) {
+    public FlightEntity(int date, int time, String destination, int seats, int flightId) {
         this.date = date;
         this.time = time;
         this.destination = destination;
         this.seats = seats;
-        this.flightId = flightsId;
+        this.flightId = flightId;
     }
 
     public int getDate() {
