@@ -12,6 +12,7 @@ import az.edu.turing.stepProjBookingApp.service.FlightService;
 import az.edu.turing.stepProjBookingApp.service.impl.BookingServiceImpl;
 import az.edu.turing.stepProjBookingApp.service.impl.FlightServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class BookingManagementApp {
     private static final BookingDao bookingDao = new BookingFileDao(new ObjectMapper());
     private static final BookingService bookingService = new BookingServiceImpl(bookingDao);
     private static final BookingController bookingController = new BookingController(bookingService);
-    private static final FlightDao flightDao = new FlightFileDao(new ObjectMapper());
+    private static final FlightDao flightDao = new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
     private static final FlightService flightService = new FlightServiceImpl(flightDao);
     private static final FlightController flightController = new FlightController(flightService);
     public static void main(String[] args) {

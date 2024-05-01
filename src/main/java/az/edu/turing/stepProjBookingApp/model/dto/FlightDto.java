@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class FlightDto {
-    private final LocalDateTime dateAndTime;
-    private final String destination;
-    private final int seats;
+    private LocalDateTime dateAndTime;
+    private String destination;
+    private int seats;
+
+    public FlightDto() {
+    }
 
     public FlightDto(LocalDateTime dateAndTime, String destination, int seats) {
         this.dateAndTime = dateAndTime;
