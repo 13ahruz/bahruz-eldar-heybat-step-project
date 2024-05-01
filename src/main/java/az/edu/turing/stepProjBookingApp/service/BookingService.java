@@ -8,5 +8,5 @@ import java.util.Collection;
 public interface BookingService {
     boolean bookAReservation (String firstName, String secondName);
     boolean cancelAReservation (long id);
-    Collection <BookingDto> showMyReservations (String firstName, String secondName);
+    Collection <BookingDto> getMyReservations (String firstName, String secondName);
 }

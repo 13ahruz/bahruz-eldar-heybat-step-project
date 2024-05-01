@@ -32,7 +32,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Collection<BookingDto> showMyReservations(String firstName, String secondName) {
+    public Collection<BookingDto> getMyReservations(String firstName, String secondName) {
         return bookingDao.getAll();
     }
 }
