@@ -7,6 +7,7 @@ public class FlightDto {
     private LocalDateTime dateAndTime;
     private String destination;
     private int seats;
+    private long flightId;
 
     public FlightDto() {
     }
@@ -44,7 +45,7 @@ public class FlightDto {
 
     @Override
     public String toString() {
-        return "dateAndTime=%s, destination='%s', seats=%d}"
-                .formatted(dateAndTime, destination, seats);
+        return "Flight ID: %d * Fly date: %s * Destination: '%s' * Seats: %d}"
+                .formatted(flightId, dateAndTime, destination, seats);
     }
 }

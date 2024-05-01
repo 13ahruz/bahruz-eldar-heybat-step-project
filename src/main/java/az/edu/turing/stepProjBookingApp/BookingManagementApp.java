@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 public class BookingManagementApp {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final BookingDao bookingDao = new BookingFileDao(new ObjectMapper());
+    private static final BookingDao bookingDao = new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
     private static final BookingService bookingService = new BookingServiceImpl(bookingDao);
     private static final BookingController bookingController = new BookingController(bookingService);
     private static final FlightDao flightDao = new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));

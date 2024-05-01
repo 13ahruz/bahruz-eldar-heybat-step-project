@@ -49,7 +49,7 @@ public class FlightEntity {
 
     @Override
     public String toString() {
-        return "dateAndTime=%s, destination='%s', seats=%d, flightId=%d}"
+        return "Fly Date: %s * Destination: '%s' * Available seats: %d * FlightId: %d}"
                 .formatted(dateAndTime, destination, seats, flightId);
     }
 }
