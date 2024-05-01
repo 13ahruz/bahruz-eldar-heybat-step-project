@@ -23,7 +23,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getAllByDest(String destination) {
-        Predicate<FlightEntity> flightEntityPredicate= flight -> flight.getDestination().equals(destination);
+        Predicate<FlightEntity> flightEntityPredicate = flight -> flight.getDestination().equals(destination);
         return flightDao.getAllBy(flightEntityPredicate).stream().toList();
     }
 

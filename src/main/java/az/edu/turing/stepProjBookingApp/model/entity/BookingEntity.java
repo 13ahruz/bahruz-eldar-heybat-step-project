@@ -1,7 +1,5 @@
 package az.edu.turing.stepProjBookingApp.model.entity;
 
-import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
-
 import java.util.Objects;
 
 public class BookingEntity {
