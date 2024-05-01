@@ -8,8 +8,8 @@ import java.util.Collection;
 public class BookingController {
     private BookingService bookingService;
 
-    public boolean bookAReservation(String firstName, String secondName) {
-        return bookingService.bookAReservation(firstName, secondName);
+    public boolean bookAReservation(String firstName, String secondName, long flightId) {
+        return bookingService.bookAReservation(firstName, secondName, flightId);
     }
 
     public boolean cancelAReservation(long id) {

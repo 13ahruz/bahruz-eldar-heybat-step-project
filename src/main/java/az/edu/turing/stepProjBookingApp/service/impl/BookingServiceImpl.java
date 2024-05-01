@@ -14,9 +14,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean bookAReservation(String firstName, String secondName) {
+    public boolean bookAReservation(String firstName, String secondName, long flightId) {
         Collection<BookingDto> newBookingList = bookingDao.getAll();
-        newBookingList.add(new BookingDto(firstName, secondName));
+        newBookingList.add(new BookingDto(firstName, secondName, flightId));
         return bookingDao.save(newBookingList.stream().toList());
         //todo  update
     }

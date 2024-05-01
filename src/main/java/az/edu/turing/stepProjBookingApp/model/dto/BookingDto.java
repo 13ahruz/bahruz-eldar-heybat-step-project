@@ -8,7 +8,7 @@ public class BookingDto {
     private final String secondName;
     private long flightId;
 
-    public BookingDto(String firstName, String secondName) {
+    public BookingDto(String firstName, String secondName, long flightId) {
         this.firstName = firstName;
         this.secondName = secondName;
     }
