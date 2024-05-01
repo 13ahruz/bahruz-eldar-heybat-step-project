@@ -5,6 +5,7 @@ import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -34,9 +35,8 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public void showAllFlightTime() {
-        Collection<FlightEntity> allFlights = flightDao.getAllFlights();
-        allFlights.stream().forEach(flight -> System.out.println(flight.toString()));
+    public List<FlightEntity> getAllFlights() {
+        return flightDao.getAllFlights().stream().toList();
     }
 
     @Override
@@ -44,7 +44,5 @@ public class FlightServiceImpl implements FlightService {
         Predicate<FlightEntity> predicateByName = flight -> flight.getFlightId() == id;
         return flightDao.getFlightBy(predicateByName);
     }
-
-
 
 }

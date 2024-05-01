@@ -5,17 +5,14 @@ import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FlightFileDao extends FlightDao {
@@ -31,7 +28,8 @@ public class FlightFileDao extends FlightDao {
     public boolean reservFlight(FlightEntity flightEntity) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
-            List<FlightEntity> flights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {});
+            List<FlightEntity> flights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
+            });
             flights.add(flightEntity);
             Files.write(Paths.get(FLIGHT_FILE_PATH), objectMapper.writeValueAsBytes(flights));
             return true;
@@ -82,15 +80,16 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public boolean cancelFlightBy(Predicate <FlightEntity> predicate) {
+    public boolean cancelFlightBy(Predicate<FlightEntity> predicate) {
         try {
-            byte [] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
-            List<FlightEntity> flights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {});
+            byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
+            List<FlightEntity> flights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
+            });
             Optional<FlightEntity> flightForRemove = flights.stream().filter(predicate).findFirst();
             flights.remove(flightForRemove);
             Files.write(Paths.get(FLIGHT_FILE_PATH), objectMapper.writeValueAsBytes(flights));
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error occured while removing reservation: " + e.getMessage());
         }
         return false;
