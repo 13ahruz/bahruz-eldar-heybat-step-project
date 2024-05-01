@@ -1,14 +1,11 @@
 package az.edu.turing.stepProjBookingApp.service.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
-import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
 import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.FlightService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -27,8 +24,8 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getAllByDest(String destination) {
-        Predicate<FlightEntity> flightEntityPredicate = flight -> flight.getDestination().equals(destination);
-        return flightDao.getAllBy(flightEntityPredicate).stream().toList();
+        Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equals(destination);
+        return flightDao.getAllBy(destPredicate).stream().toList();
     }
 
     @Override

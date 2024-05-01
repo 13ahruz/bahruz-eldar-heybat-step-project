@@ -35,12 +35,12 @@ public class FlightDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightDto flightDto = (FlightDto) o;
-        return seats == flightDto.seats && Objects.equals(dateAndTime, flightDto.dateAndTime) && Objects.equals(destination, flightDto.destination);
+        return seats == flightDto.seats && flightId == flightDto.flightId && Objects.equals(dateAndTime, flightDto.dateAndTime) && Objects.equals(destination, flightDto.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dateAndTime, destination, seats);
+        return Objects.hash(dateAndTime, destination, seats, flightId);
     }
 
     @Override

@@ -37,14 +37,12 @@ public class FlightEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightEntity that = (FlightEntity) o;
-        return seats == that.seats && flightId == that.flightId && Objects
-                .equals(dateAndTime, that.dateAndTime) && Objects
-                .equals(destination, that.destination);
+        return seats == that.seats && flightId == that.flightId && Objects.equals(dateAndTime, that.dateAndTime) && Objects.equals(destination, that.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(flightId);
+        return Objects.hash(dateAndTime, destination, seats, flightId);
     }
 
     @Override
