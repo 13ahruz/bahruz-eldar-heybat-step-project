@@ -7,13 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class FlightController {
-
     private FlightService flightService;
-
     public List<FlightDto> onlineBoard() {
         return flightService.getAllFlights();
     }
-
     public Optional<FlightDto> getFlightById(long id) {
         return flightService.getFlightById(id);
     }
