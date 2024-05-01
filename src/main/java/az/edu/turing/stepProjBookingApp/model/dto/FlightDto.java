@@ -1,26 +1,21 @@
 package az.edu.turing.stepProjBookingApp.model.dto;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class FlightDto {
-    private final int date;
-    private final int time;
+    private final LocalDateTime dateAndTime;
     private final String destination;
     private final int seats;
 
-    public FlightDto(int date, int time, String destination, int seats) {
-        this.date = date;
-        this.time = time;
+    public FlightDto(LocalDateTime dateAndTime, String destination, int seats) {
+        this.dateAndTime = dateAndTime;
         this.destination = destination;
         this.seats = seats;
     }
 
-    public int getDate() {
-        return date;
-    }
-
-    public int getTime() {
-        return time;
+    public LocalDateTime getDateAndTime() {
+        return dateAndTime;
     }
 
     public String getDestination() {
@@ -36,17 +31,17 @@ public class FlightDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightDto flightDto = (FlightDto) o;
-        return date == flightDto.date && time == flightDto.time && seats == flightDto.seats && destination.equals(flightDto.destination);
+        return seats == flightDto.seats && Objects.equals(dateAndTime, flightDto.dateAndTime) && Objects.equals(destination, flightDto.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, time, destination, seats);
+        return Objects.hash(dateAndTime, destination, seats);
     }
 
     @Override
     public String toString() {
-        return "date=%d, time=%d, destination='%s', seats=%d}"
-                .formatted(date, time, destination, seats);
+        return "dateAndTime=%s, destination='%s', seats=%d}"
+                .formatted(dateAndTime, destination, seats);
     }
 }

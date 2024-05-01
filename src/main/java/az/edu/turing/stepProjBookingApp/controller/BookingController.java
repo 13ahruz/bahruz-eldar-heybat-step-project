@@ -6,7 +6,11 @@ import az.edu.turing.stepProjBookingApp.service.BookingService;
 import java.util.Collection;
 
 public class BookingController {
-    private BookingService bookingService;
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     public boolean bookAReservation(String firstName, String secondName, long flightId) {
         return bookingService.bookAReservation(firstName, secondName, flightId);
