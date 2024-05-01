@@ -3,14 +3,14 @@ package az.edu.turing.stepProjBookingApp.model.dto;
 import java.util.Objects;
 
 public class BookingDto {
+    //TODO generate unique ids
     private final String firstName;
     private final String secondName;
-    private final long flightId;
+    private long flightId;
 
-    public BookingDto(String firstName, String secondName, long flightId) {
+    public BookingDto(String firstName, String secondName) {
         this.firstName = firstName;
         this.secondName = secondName;
-        this.flightId = flightId;
     }
 
     public String getFirstName() {

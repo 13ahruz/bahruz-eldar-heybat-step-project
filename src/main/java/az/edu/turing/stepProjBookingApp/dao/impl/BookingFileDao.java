@@ -2,7 +2,7 @@ package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
-import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
+import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,8 +54,8 @@ public class BookingFileDao extends BookingDao {
     public Optional<BookingDto> getOneBy(Predicate predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
-            FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
-            return Stream.of(flights)
+            BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
+            return Stream.of(bookings)
                     .filter(predicate)
                     .findFirst();
         } catch (IOException e) {
