@@ -15,5 +15,4 @@
 //    List<FlightEntity> getAllFlights();
 //
 //    Optional<FlightEntity> getFlightById(long id);
-
 //}
