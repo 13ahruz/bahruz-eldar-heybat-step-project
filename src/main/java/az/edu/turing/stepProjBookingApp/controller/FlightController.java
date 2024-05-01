@@ -18,7 +18,6 @@ public class FlightController {
     public Optional<FlightDto> getFlightById(long id) {
         return flightService.getFlightById(id);
     }
-
     public boolean createFlight (FlightEntity flightEntity){
         return flightService.createFlight(flightEntity);
     }

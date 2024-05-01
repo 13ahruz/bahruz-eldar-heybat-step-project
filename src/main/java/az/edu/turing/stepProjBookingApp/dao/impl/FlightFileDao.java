@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class FlightFileDao extends FlightDao {
-    private static final String RESOURCE_PATH = "src/main/java/az/edu/turing/stepProjBookingApp/resource";
+    private static final String RESOURCE_PATH = "az/edu/turing/stepProjBookingApp/resource/";
     private static final String FLIGHT_FILE_PATH = RESOURCE_PATH.concat("flights.json");
     private final ObjectMapper objectMapper;
 
@@ -27,10 +27,10 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public boolean save(List<FlightDto> flightDto) {
+    public boolean save(List<FlightDto> flights) {
         try {
             final Path path = Paths.get(FLIGHT_FILE_PATH);
-            Files.write(path, objectMapper.writeValueAsBytes(flightDto));
+            Files.write(path, objectMapper.writeValueAsBytes(flights));
             return true;
         } catch (IOException e) {
             System.err.println("Error while adding new flight: " + e.getMessage());

@@ -7,6 +7,7 @@ import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.FlightService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -43,8 +44,15 @@ public class FlightServiceImpl implements FlightService {
                 flightEntity.getDestination(),
                 flightEntity.getSeats()
         );
-        List<FlightDto> flights = flightDao.getAll().stream().toList();
-        return flightDao.save(flights);
+        if (flightDao.getAll() != null){
+            List<FlightDto> flights = new java.util.ArrayList<>(flightDao.getAll().stream().toList());
+            flights.add(flightDto);
+            return flightDao.save(flights);
+        }
+        else {
+            List<FlightDto> flights = new ArrayList<>();
+            flights.add(flightDto);
+            return flightDao.save(flights);
+        }
     }
-
 }
