@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class FlightController {
 
-    public FlightService flightService;
+    private FlightService flightService;
 
     public List<FlightDto> onlineBoard() {
         return flightService.getAllFlights();
