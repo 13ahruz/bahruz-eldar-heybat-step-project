@@ -23,13 +23,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean cancelAReservation(long id) {
-        Collection<BookingDto> newBookingList = bookingDao.getAll();
-        newBookingList.removeIf(bookingDto -> bookingDto.getFlightId() == id);
-        return bookingDao.save(newBookingList.stream().toList());
+        Collection<BookingDto> allReservations = bookingDao.getAll();
+        allReservations.removeIf(bookingDto -> bookingDto.getFlightId() == id);
+        return bookingDao.save(allReservations.stream().toList());
     }
 
     @Override
     public Collection<BookingDto> getMyReservations(String firstName, String secondName) {
-        return bookingDao.getAll();
+        Collection<BookingDto> allReservations = bookingDao.getAll();
+        Collection<BookingDto> myReservations = allReservations.stream().filter(booking ->
+                booking.getFirstName() == firstName && booking.getSecondName() == secondName).toList();
+        return myReservations;
     }
 }
