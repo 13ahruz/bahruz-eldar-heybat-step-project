@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FlightService {
-    List<FlightDto> getAllFlights();
-    List<FlightDto> getAllByDest(String destination);
-    FlightDto getFlightById(long id);
+    Optional <List<FlightDto>> getAllFlights();
+    Optional<List<FlightDto>> getAllByDest(String destination);
+    Optional <FlightDto> getFlightById(long id);
     boolean createFlight (FlightDto flightDto);
 }

@@ -9,42 +9,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FlightServiceImpl implements FlightService {
-    private FlightDao flightDao;
+    private final FlightDao flightDao;
 
     public FlightServiceImpl(FlightDao flightDao) {
         this.flightDao = flightDao;
     }
 
     @Override
-    public List<FlightDto> getAllFlights() {
-        List <FlightEntity> FlightsById = flightDao.getAll().stream().toList();
-        List <FlightDto> FlightsByIdDto = null;
-        for (FlightEntity flight : FlightsById) {
-            FlightsByIdDto.add(new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()));
+    public Optional<List<FlightDto>> getAllFlights() {
+        List<FlightEntity> flightsById = flightDao.getAll().stream().toList();
+        List<FlightDto> flightsByIdDto = new ArrayList<>();
+        for (FlightEntity flight : flightsById) {
+            flightsByIdDto.add(new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()));
         }
-        return FlightsByIdDto;
+        return Optional.of(flightsByIdDto);
     }
 
     @Override
-    public List<FlightDto> getAllByDest(String destination) {
+    public Optional<List<FlightDto>> getAllByDest(String destination) {
         Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equals(destination);
-        List <FlightEntity> FlightsById = flightDao.getAllBy(destPredicate);
-        List <FlightDto> FlightsByIdDto = null;
-        for (FlightEntity flight : FlightsById) {
-            FlightsByIdDto.add(new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()));
-        }
-        return FlightsByIdDto;
+        Optional<List<FlightEntity>> flightsById = flightDao.getAllBy(destPredicate);
+        return flightsById.map(flights ->
+                flights.stream()
+                        .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
-    public FlightDto getFlightById(long id) {
+    public Optional<FlightDto> getFlightById(long id) {
         Predicate<FlightEntity> predicateByName = flight -> flight.getFlightId() == id;
-        Optional <FlightEntity> FlightById = flightDao.getOneBy(predicateByName);
-        FlightDto FlightByIdDto = new FlightDto(FlightById.get().getDateAndTime(), FlightById.get().getDestination(), FlightById.get().getSeats(), FlightById.get().getFlightId());
-        return FlightByIdDto;
+        Optional<FlightEntity> flightById = flightDao.getOneBy(predicateByName);
+        if (flightById.isPresent()) {
+            FlightEntity flightEntity = flightById.get();
+            FlightDto flightDto = new FlightDto(flightEntity.getDateAndTime(), flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId());
+            return Optional.of(flightDto);
+        } else {
+            return Optional.empty();
+        }
     }
+
 
     @Override
     public boolean createFlight (FlightDto flightDto){
