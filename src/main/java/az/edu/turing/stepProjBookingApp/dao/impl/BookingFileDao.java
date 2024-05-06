@@ -2,14 +2,13 @@ package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
-import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
+import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class BookingFileDao extends BookingDao {
     }
 
     @Override
-    public boolean save(List<BookingDto> reservations) {
+    public boolean save(List<BookingEntity> reservations) {
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -43,10 +42,10 @@ public class BookingFileDao extends BookingDao {
     }
 
     @Override
-    public Collection<BookingDto> getAllBy(Predicate predicate) {
+    public List<BookingEntity> getAllBy(Predicate predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
-            return objectMapper.readValue(jsonData, new TypeReference<Collection<BookingDto>>() {
+            return objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {
             });
         } catch (Exception e) {
             System.out.println("Error while loading bookings from file: " + e.getMessage());
@@ -56,26 +55,20 @@ public class BookingFileDao extends BookingDao {
 
     @Override
     public Optional<BookingDto> getOneBy(Predicate predicate) {
-        try {
-            byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
-            BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
+            Collection<BookingEntity> bookings = getAll();
             return Stream.of(bookings)
                     .filter(predicate)
                     .findFirst();
-        } catch (IOException e) {
-            System.out.println("Error while reading bookings from file: " + e.getMessage());
-        }
-        return Optional.empty();
     }
 
     @Override
-    public Collection<BookingDto> getAll() {
+    public Collection<BookingEntity> getAll() {
         try {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String jsonData = br.readLine();
             if (jsonData != null && !jsonData.isBlank()) {
-                BookingDto[] flights = objectMapper.readValue(jsonData, BookingDto[].class);
+                BookingEntity[] flights = objectMapper.readValue(jsonData, BookingEntity[].class);
                 br.close();
                 return Arrays.stream(flights).toList();
             }

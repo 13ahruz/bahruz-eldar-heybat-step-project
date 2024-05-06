@@ -5,5 +5,5 @@ import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 
 import java.util.List;
 
-public abstract class FlightDao implements DAO<FlightDto, FlightEntity, List<FlightDto>> {
+public abstract class FlightDao implements DAO<FlightEntity> {
 }

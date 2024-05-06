@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,7 +27,7 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public boolean save(List<FlightDto> flights) {
+    public boolean save(List<FlightEntity> flights) {
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -42,10 +41,10 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public Collection<FlightDto> getAllBy(Predicate predicate) {
+    public List<FlightEntity> getAllBy(Predicate <FlightEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
-            return objectMapper.readValue(jsonData, new TypeReference<Collection<FlightDto>>() {
+            return objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
             });
         } catch (Exception e) {
             System.out.println("Error while loading flights from file: " + e.getMessage());
@@ -54,13 +53,13 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public Optional<FlightDto> getOneBy(Predicate predicate) {
+    public Optional<FlightEntity> getOneBy(Predicate<FlightEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
             FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
-            return Stream.of(flights)
-                    .filter(predicate)
-                    .findFirst();
+
+            Optional<FlightEntity> oneFlight = Arrays.stream(flights).filter(predicate).findFirst();
+            return oneFlight;
         } catch (IOException e) {
             System.out.println("Error while reading flights from file: " + e.getMessage());
         }
@@ -68,13 +67,13 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public Collection<FlightDto> getAll() {
+    public Collection<FlightEntity> getAll() {
         try {
             FileReader fr = new FileReader(file);
             BufferedReader x = new BufferedReader(fr);
             String jsonData = x.readLine();
             if (jsonData != null && !jsonData.isBlank()) {
-                FlightDto[] flights = objectMapper.readValue(jsonData, FlightDto[].class);
+                FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
                 x.close();
                 return Arrays.stream(flights).toList();
             }

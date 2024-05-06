@@ -12,10 +12,11 @@ public class FlightDto {
     public FlightDto() {
     }
 
-    public FlightDto(LocalDateTime dateAndTime, String destination, int seats) {
+    public FlightDto(LocalDateTime dateAndTime, String destination, int seats, long flightId) {
         this.dateAndTime = dateAndTime;
         this.destination = destination;
         this.seats = seats;
+        this.flightId = flightId;
     }
 
     public LocalDateTime getDateAndTime() {
@@ -28,6 +29,22 @@ public class FlightDto {
 
     public int getSeats() {
         return seats;
+    }
+
+    public long getFlightId() {
+        return flightId;
+    }
+
+    public void setDateAndTime(LocalDateTime dateAndTime) {
+        this.dateAndTime = dateAndTime;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public void setSeats(int seats) {
+        this.seats = seats;
     }
 
     @Override
