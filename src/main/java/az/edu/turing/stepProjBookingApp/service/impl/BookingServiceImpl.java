@@ -1,10 +1,12 @@
 package az.edu.turing.stepProjBookingApp.service.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
-import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
+import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class BookingServiceImpl implements BookingService {
     private BookingDao bookingDao;
@@ -15,24 +17,25 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean bookAReservation(String firstName, String secondName, long flightId) {
-        Collection<BookingDto> newBookingList = bookingDao.getAll();
-        newBookingList.add(new BookingDto(firstName, secondName, flightId));
-        return bookingDao.save(newBookingList.stream().toList());
-        //todo  update
+        Optional<List<BookingEntity>> list = bookingDao.getAll();
+        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId);
+        list.get().add(bookingEntity);
+        return bookingDao.save(list.get());
     }
 
     @Override
     public boolean cancelAReservation(long id) {
-        Collection<BookingDto> allReservations = bookingDao.getAll();
-        allReservations.removeIf(bookingDto -> bookingDto.getFlightId() == id);
-        return bookingDao.save(allReservations.stream().toList());
+        Optional<List<BookingEntity>> allReservation = bookingDao.getAll();
+        Predicate<BookingEntity> bookingEntityPredicate = bookingEntity -> bookingEntity.getFlightId() == id;
+        allReservation.get().remove(bookingEntityPredicate);
+        return bookingDao.save(allReservation.get());
     }
 
     @Override
-    public Collection<BookingDto> getMyReservations(String firstName, String secondName) {
-        Collection<BookingDto> allReservations = bookingDao.getAll();
-        Collection<BookingDto> myReservations = allReservations.stream().filter(booking ->
-                booking.getFirstName() == firstName && booking.getSecondName() == secondName).toList();
+    public Optional<List<BookingEntity>> getMyReservations(String firstName, String secondName) {
+        Optional<List<BookingEntity>> allReservation = bookingDao.getAll();
+        Predicate<List<BookingEntity>> bookingEntityPredicate = bookingEntity -> bookingEntity.getFirst().getFirstName() ==firstName && bookingEntity.getFirst().getSecondName() == secondName ;
+        Optional<List<BookingEntity>> myReservations = allReservation.filter(bookingEntityPredicate);
         return myReservations;
     }
 }
