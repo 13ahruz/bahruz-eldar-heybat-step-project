@@ -59,7 +59,6 @@ public class FlightServiceImpl implements FlightService {
                 flightDto.getDestination(),
                 flightDto.getSeats()
         );
-
         List<FlightEntity> flights = flightDao.getAll().orElse(new ArrayList<>());
         flights.add(flightEntity);
 

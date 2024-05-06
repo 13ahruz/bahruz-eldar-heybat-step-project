@@ -42,40 +42,40 @@ public class BookingFileDao extends BookingDao {
     }
 
     @Override
-    public List<BookingEntity> getAllBy(Predicate predicate) {
+    public Optional<List<BookingEntity>> getAllBy(Predicate<BookingEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
-            return objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {
-            });
-        } catch (Exception e) {
+            List<BookingEntity> bookings = objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {});
+            List<BookingEntity> filteredBookings = bookings.stream()
+                    .filter(predicate)
+                    .toList();
+            return Optional.of(filteredBookings);
+        } catch (IOException e) {
             System.out.println("Error while loading bookings from file: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public Optional<BookingDto> getOneBy(Predicate predicate) {
-            Collection<BookingEntity> bookings = getAll();
+            Optional <List <BookingEntity>> bookings = getAll();
             return Stream.of(bookings)
                     .filter(predicate)
                     .findFirst();
     }
 
     @Override
-    public Collection<BookingEntity> getAll() {
-        try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+    public Optional<List<BookingEntity>> getAll() {
+        try (FileReader fr = new FileReader(file);
+             BufferedReader br = new BufferedReader(fr)) {
             String jsonData = br.readLine();
             if (jsonData != null && !jsonData.isBlank()) {
-                BookingEntity[] flights = objectMapper.readValue(jsonData, BookingEntity[].class);
-                br.close();
-                return Arrays.stream(flights).toList();
+                BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
+                return Optional.of(Arrays.asList(bookings));
             }
-            br.close();
         } catch (IOException e) {
             System.out.println("Error while reading reservations from file: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 }
