@@ -20,13 +20,12 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public Optional<List<FlightDto>> getAllFlights() {
-        List<FlightEntity> flightsById = flightDao.getAll().stream().toList();
-        List<FlightDto> flightsByIdDto = new ArrayList<>();
-        for (FlightEntity flight : flightsById) {
-            flightsByIdDto.add(new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()));
-        }
-        return Optional.of(flightsByIdDto);
+        List<FlightDto> flightsDto = flightDao.getAll().stream()
+                .map(flight -> new FlightDto(flight.getFirst().getDateAndTime(), flight.getFirst().getDestination(), flight.getFirst().getSeats(), flight.getFirst().getFlightId()))
+                .collect(Collectors.toList());
+        return Optional.of(flightsDto);
     }
+
 
     @Override
     public Optional<List<FlightDto>> getAllByDest(String destination) {
@@ -54,21 +53,16 @@ public class FlightServiceImpl implements FlightService {
 
 
     @Override
-    public boolean createFlight (FlightDto flightDto){
+    public boolean createFlight(FlightDto flightDto) {
         FlightEntity flightEntity = new FlightEntity(
                 flightDto.getDateAndTime(),
                 flightDto.getDestination(),
                 flightDto.getSeats()
         );
-        if (flightDao.getAll() != null){
-            List<FlightEntity> flights = new ArrayList<>(flightDao.getAll().stream().toList());
-            flights.add(flightEntity);
-            return flightDao.save(flights);
-        }
-        else {
-            List<FlightEntity> flights = new ArrayList<>();
-            flights.add(flightEntity);
-            return flightDao.save(flights);
-        }
+
+        List<FlightEntity> flights = flightDao.getAll().orElse(new ArrayList<>());
+        flights.add(flightEntity);
+
+        return flightDao.save(flights);
     }
 }

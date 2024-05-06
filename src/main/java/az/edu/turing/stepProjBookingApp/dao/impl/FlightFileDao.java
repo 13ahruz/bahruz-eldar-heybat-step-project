@@ -1,7 +1,6 @@
 package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
-import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,11 +9,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class FlightFileDao extends FlightDao {
     private static final String RESOURCE_PATH = "C:\\Users\\ROMedia\\IdeaProjects\\bahruz-eldar-heybat-step-project\\src\\main\\java\\az\\edu\\turing\\stepProjBookingApp\\resource\\";
@@ -41,15 +38,17 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public List<FlightEntity> getAllBy(Predicate <FlightEntity> predicate) {
+    public Optional<List<FlightEntity>> getAllBy(Predicate<FlightEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
-            return objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
+            List<FlightEntity> allFlights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
             });
-        } catch (Exception e) {
+            List<FlightEntity> filteredFlights = allFlights.stream().filter(predicate).toList();
+            return Optional.of(filteredFlights);
+        } catch (IOException e) {
             System.out.println("Error while loading flights from file: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public Collection<FlightEntity> getAll() {
+    public Optional<List<FlightEntity>> getAll() {
         try {
             FileReader fr = new FileReader(file);
             BufferedReader x = new BufferedReader(fr);
@@ -75,12 +74,13 @@ public class FlightFileDao extends FlightDao {
             if (jsonData != null && !jsonData.isBlank()) {
                 FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
                 x.close();
-                return Arrays.stream(flights).toList();
+                return Optional.of(Arrays.asList(flights));
             }
             x.close();
         } catch (IOException e) {
             System.out.println("Error while reading flights from file: " + e.getMessage());
         }
-        return null;
+        return Optional.empty();
     }
+
 }
