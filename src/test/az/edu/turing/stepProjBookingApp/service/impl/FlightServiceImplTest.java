@@ -18,9 +18,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,77 +35,79 @@ class FlightServiceImplTest {
     public static final FlightService flightService = new FlightServiceImpl(flightDao);
     public static final FlightController flightController = new FlightController(flightService);
 
+    @Test
+    void testGetAllFlights() {
+        FlightDao flightDao = mock(FlightDao.class);
 
-//    @Test
-//    void getAllFlights() {
-//        LocalDateTime dateTime1 = LocalDateTime.of(2024, 5, 2, 10, 0);
-//        LocalDateTime dateTime2 = LocalDateTime.of(2024, 5, 3, 12, 0);
-//        FlightDto flight1 = new FlightDto(dateTime1, "New York", 200);
-//        FlightDto flight2 = new FlightDto(dateTime2, "Los Angeles", 150);
-//
-//        List<FlightDto> sampleFlights = Arrays.asList(flight1, flight2);
-//        when(flightDao.getAll()).thenReturn(sampleFlights);
-//        List<FlightDto> returnedFlights = flightService.getAllFlights();
-//        verify(flightDao, times(1)).getAll();
-//        assertEquals(sampleFlights, returnedFlights);
-//    }
-//
-//    @Test
-//    void getAllByDest() {
-//        // Mock data
-//        String destination = "New York";
-//        LocalDateTime dateTime1 = LocalDateTime.of(2024, 5, 2, 10, 0);
-//        LocalDateTime dateTime2 = LocalDateTime.of(2024, 5, 3, 12, 0);
-//        FlightEntity flightEntity1 = new FlightEntity(dateTime1, "New York", 200);
-//        FlightEntity flightEntity2 = new FlightEntity(dateTime2, "Los Angeles", 150);
-//        FlightDto flightDto1 = new FlightDto(dateTime1, "New York", 200);
-//        FlightDto flightDto2 = new FlightDto(dateTime2, "Los Angeles", 150);
-//
-//        // Mock behavior
-//        when(flightDao.getAllBy(any())).thenReturn(List.of(flightDto1, flightDto2));
-//
-//        // Test
-//        List<FlightDto> flightsByDestination = flightService.getAllByDest(destination);
-//
-//        // Verify
-//        assertNotNull(flightsByDestination);
-//        assertEquals(1, flightsByDestination.size());
-//        assertEquals(flightDto1, flightsByDestination.get(0));
-//    }
+        LocalDateTime dateTime1 = LocalDateTime.of(2024, 5, 2, 10, 0);
+        LocalDateTime dateTime2 = LocalDateTime.of(2024, 5, 3, 12, 0);
+        FlightEntity flight1 = new FlightEntity(dateTime1, "New York", 200);
+        FlightEntity flight2 = new FlightEntity(dateTime2, "Los Angeles", 150);
 
-//    @Test
-//    void getFlightById() {
-//        // Sample data
-//        long flightId = 123456;
-//        LocalDateTime dateTime = LocalDateTime.of(2024, 5, 2, 10, 0);
-//        FlightDto flightDto = new FlightDto(dateTime, "New York", 200);
-//        flightDto.setFlightId(flightId);
-//
-//        when(flightDao.getOneBy(any())).thenReturn(Optional.of(flightDto));
-//
-//        Optional<FlightDto> returnedFlight = flightService.getFlightById(flightId);
-//
-//        verify(flightDao, times(1)).getOneBy(any());
-//
-//        assertTrue(returnedFlight.isPresent());
-//        assertEquals(flightId, returnedFlight.get().getFlightId());
-//    }
+        when(flightDao.getAll()).thenReturn(Optional.of(Arrays.asList(flight1, flight2)));
+        Optional<List<FlightDto>> result = flightService.getAllFlights();
 
-//    @Test
-//    void createFlight() {
-//        LocalDateTime dateTime = LocalDateTime.of(2024, 5, 2, 10, 0);
-//        FlightEntity flightEntity = new FlightEntity(dateTime, "New York", 200);
-//
-//        // Mock the behavior of flightDao.getAll() to return null initially
-//        when(flightDao.getAll()).thenReturn(null);
-//
-//        // Call the method under test
-//        boolean result = flightService.createFlight(flightEntity);
-//
-//        // Verify that flightDao.getAll() was called exactly once
-//        verify(flightDao, times(1)).getAll();
-//
-//        // Assert that the result is true (indicating successful creation)
-//        assertTrue(result);
-//    }
+        List<FlightDto> expectedFlights = Arrays.asList(
+                new FlightDto(dateTime1, "New York", 200, flight1.getFlightId()),
+                new FlightDto(dateTime2, "Los Angeles", 150, flight2.getFlightId())
+        );
+        assertEquals(Optional.of(expectedFlights), result);
+    }
+
+
+    @Test
+    void testGetAllByDest() {
+        FlightDao flightDao = mock(FlightDao.class);
+
+        LocalDateTime dateTime1 = LocalDateTime.of(2024, 5, 2, 10, 0);
+        LocalDateTime dateTime2 = LocalDateTime.of(2024, 5, 3, 12, 0);
+        FlightEntity flight1 = new FlightEntity(dateTime1, "New York", 200);
+        FlightEntity flight2 = new FlightEntity(dateTime2, "Los Angeles", 150);
+        FlightEntity flight3 = new FlightEntity(dateTime1, "New York", 220);
+
+        String destination = "New York";
+        Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equals(destination);
+        when(flightDao.getAllBy(destPredicate)).thenReturn(Optional.of(Arrays.asList(flight1, flight3)));
+
+        Optional<List<FlightDto>> result = flightService.getAllByDest(destination);
+
+        List<FlightDto> expectedFlights = Arrays.asList(
+                new FlightDto(dateTime1, "New York", 200, flight1.getFlightId()),
+                new FlightDto(dateTime1, "New York", 220, flight3.getFlightId())
+        );
+        assertEquals(Optional.of(expectedFlights), result);
+    }
+
+    @Test
+    void testGetFlightById() {
+        FlightDao flightDao = mock(FlightDao.class);
+
+        long id = 1;
+        LocalDateTime dateTime = LocalDateTime.of(2024, 5, 2, 10, 0);
+        FlightEntity flightEntity = new FlightEntity(dateTime, "New York", 200);
+
+        Predicate<FlightEntity> predicate = flight -> flight.getFlightId() == id;
+        when(flightDao.getOneBy(predicate)).thenReturn(Optional.of(flightEntity));
+
+        Optional<FlightDto> result = flightService.getFlightById(id);
+
+        assertTrue(result.isPresent());
+        assertEquals(new FlightDto(dateTime, "New York", 200, id), result.get());
+    }
+
+    @Test
+    void testCreateFlight() {
+        FlightDao flightDao = mock(FlightDao.class);
+
+        LocalDateTime dateTime = LocalDateTime.of(2024, 5, 2, 10, 0);
+        FlightDto flightDto = new FlightDto(dateTime, "New York", 200, 1); // Assuming flight ID is 1
+
+        when(flightDao.getAll()).thenReturn(Optional.of(new ArrayList<>()));
+
+        boolean result = flightService.createFlight(flightDto);
+
+        assertTrue(result);
+        verify(flightDao).getAll();
+        verify(flightDao).save(List.of(new FlightEntity(dateTime, "New York", 200)));
+    }
 }

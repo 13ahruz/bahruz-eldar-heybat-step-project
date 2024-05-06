@@ -26,7 +26,6 @@ public class FlightServiceImpl implements FlightService {
         return Optional.of(flightsDto);
     }
 
-
     @Override
     public Optional<List<FlightDto>> getAllByDest(String destination) {
         Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equals(destination);
