@@ -12,13 +12,12 @@ public class FlightController {
     public FlightController(FlightService flightService) {
         this.flightService = flightService;
     }
-    public List<FlightDto> onlineBoard() {
+    public Optional <List<FlightDto>> onlineBoard() {
         return flightService.getAllFlights();
     }
     public Optional<FlightDto> getFlightById(long id) {
         return flightService.getFlightById(id);
     }
-    public boolean createFlight (FlightEntity flightEntity){
-        return flightService.createFlight(flightEntity);
+    public boolean createFlight (FlightDto flightDto){return flightService.createFlight(flightDto);
     }
 }

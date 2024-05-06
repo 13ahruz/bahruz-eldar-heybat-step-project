@@ -6,6 +6,7 @@ import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.BookingFileDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.FlightFileDao;
+import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
 import az.edu.turing.stepProjBookingApp.service.FlightService;
@@ -32,9 +33,24 @@ public class BookingManagementApp {
                 LocalDateTime.of(2024, 5, 2, 11, 30), "Moscow", 13);
         FlightEntity flight3 = new FlightEntity(
                 LocalDateTime.of(2024, 5, 3, 12, 30), "London", 2);
-        flightController.createFlight(flight1);
-        flightController.createFlight(flight2);
-        flightController.createFlight(flight3);
+        flightController.createFlight(new FlightDto(
+                flight1.getDateAndTime(),
+                flight1.getDestination(),
+                flight1.getSeats(),
+                flight1.getFlightId()
+        ));
+        flightController.createFlight(new FlightDto(
+                flight2.getDateAndTime(),
+                flight2.getDestination(),
+                flight2.getSeats(),
+                flight2.getFlightId()
+        ));
+        flightController.createFlight(new FlightDto(
+                flight3.getDateAndTime(),
+                flight3.getDestination(),
+                flight3.getSeats(),
+                flight3.getFlightId()
+        ));
         while (true){
             displayMenu();
             int choice = readChoice();
@@ -43,8 +59,10 @@ public class BookingManagementApp {
             switch (choice) {
                 case 1:
                     flightController.onlineBoard()
-                            .forEach(flight -> System.out.println(flight.toString()));
-                    break;
+                            .ifPresentOrElse(
+                                    flights -> flights.forEach(flight -> System.out.println(flight.toString())),
+                                    () -> System.out.println("No flights available")
+                            );
                 case 2:
                     System.out.println("Enter flight id: ");
                     int tempChoice = readChoice();
