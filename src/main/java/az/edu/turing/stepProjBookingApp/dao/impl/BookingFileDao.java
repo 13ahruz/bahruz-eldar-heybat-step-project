@@ -28,15 +28,15 @@ public class BookingFileDao extends BookingDao {
     }
 
     @Override
-    public boolean save(List<BookingEntity> reservations) {
+    public boolean save(List<BookingEntity> bookings) {
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(objectMapper.writeValueAsString(reservations));
+            bw.write(objectMapper.writeValueAsString(bookings));
             bw.close();
             return true;
         } catch (IOException e) {
-            System.err.println("Error while booking: " + e.getMessage());
+            System.err.println("Error while adding new flight: " + e.getMessage());
         }
         return false;
     }
@@ -45,36 +45,44 @@ public class BookingFileDao extends BookingDao {
     public Optional<List<BookingEntity>> getAllBy(Predicate<BookingEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
-            List<BookingEntity> bookings = objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {});
-            List<BookingEntity> filteredBookings = bookings.stream()
-                    .filter(predicate)
-                    .toList();
+            List<BookingEntity> allBookings = objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {
+            });
+            List<BookingEntity> filteredBookings = allBookings.stream().filter(predicate).toList();
             return Optional.of(filteredBookings);
         } catch (IOException e) {
-            System.out.println("Error while loading bookings from file: " + e.getMessage());
+            System.out.println("Error while loading flights from file: " + e.getMessage());
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<BookingDto> getOneBy(Predicate predicate) {
-            Optional <List <BookingEntity>> bookings = getAll();
-            return Stream.of(bookings)
-                    .filter(predicate)
-                    .findFirst();
+    public Optional<BookingEntity> getOneBy(Predicate<BookingEntity> predicate) {
+        try {
+            byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
+            BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
+
+            Optional<BookingEntity> oneFlight = Arrays.stream(bookings).filter(predicate).findFirst();
+            return oneFlight;
+        } catch (IOException e) {
+            System.out.println("Error while reading flights from file: " + e.getMessage());
+        }
+        return Optional.empty();
     }
 
     @Override
     public Optional<List<BookingEntity>> getAll() {
-        try (FileReader fr = new FileReader(file);
-             BufferedReader br = new BufferedReader(fr)) {
-            String jsonData = br.readLine();
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader x = new BufferedReader(fr);
+            String jsonData = x.readLine();
             if (jsonData != null && !jsonData.isBlank()) {
                 BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
+                x.close();
                 return Optional.of(Arrays.asList(bookings));
             }
+            x.close();
         } catch (IOException e) {
-            System.out.println("Error while reading reservations from file: " + e.getMessage());
+            System.out.println("Error while reading flights from file: " + e.getMessage());
         }
         return Optional.empty();
     }
