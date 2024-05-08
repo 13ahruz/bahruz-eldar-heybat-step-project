@@ -38,17 +38,16 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public Optional<List<FlightEntity>> getAllBy(Predicate<FlightEntity> predicate) {
+    public List<FlightEntity> getAllBy(Predicate<FlightEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
             List<FlightEntity> allFlights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
             });
-            List<FlightEntity> filteredFlights = allFlights.stream().filter(predicate).toList();
-            return Optional.of(filteredFlights);
+            return allFlights.stream().filter(predicate).toList();
         } catch (IOException e) {
             System.out.println("Error while loading flights from file: " + e.getMessage());
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class FlightFileDao extends FlightDao {
     }
 
     @Override
-    public Optional<List<FlightEntity>> getAll() {
+    public List<FlightEntity> getAll() {
         try {
             FileReader fr = new FileReader(file);
             BufferedReader x = new BufferedReader(fr);
@@ -74,13 +73,13 @@ public class FlightFileDao extends FlightDao {
             if (jsonData != null && !jsonData.isBlank()) {
                 FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
                 x.close();
-                return Optional.of(Arrays.asList(flights));
+                return Arrays.asList(flights);
             }
             x.close();
         } catch (IOException e) {
             System.out.println("Error while reading flights from file: " + e.getMessage());
         }
-        return Optional.empty();
+        return null;
     }
 
 }

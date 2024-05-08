@@ -1,9 +1,12 @@
 package az.edu.turing.stepProjBookingApp.controller;
 
 import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
+import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 public class BookingController {
     private final BookingService bookingService;
@@ -20,7 +23,7 @@ public class BookingController {
         return bookingService.cancelAReservation(id);
     }
 
-    public Collection<BookingDto> getMyReservations(String firstName, String secondName) {
+    public Optional<List<BookingEntity>> getMyReservations(String firstName, String secondName) {
         return bookingService.getMyReservations(firstName, secondName);
     }
 

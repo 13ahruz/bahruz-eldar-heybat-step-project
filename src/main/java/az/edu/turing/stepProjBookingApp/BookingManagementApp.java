@@ -95,7 +95,7 @@ public class BookingManagementApp {
                     firstName = scanner.nextLine();
                     System.out.println("Enter your second name: ");
                     secondName = scanner.nextLine();
-                    bookingController.getMyReservations(firstName, secondName)
+                    bookingController.getMyReservations(firstName, secondName).get()
                             .forEach(flight -> System.out.println(flight.toString()));
                     break;
                 case 6:
