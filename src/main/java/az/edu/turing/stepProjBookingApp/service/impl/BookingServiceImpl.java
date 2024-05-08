@@ -31,12 +31,12 @@
 //        return bookingDao.save(allReservation);
 //    }
 //
-////    @Override
-////    public Optional<List<BookingEntity>> getMyReservations(String firstName, String secondName) {
-////        List<BookingEntity> allReservation = bookingDao.getAll();
-////        Predicate<List<BookingEntity>> bookingEntityPredicate = bookingEntity -> bookingEntity.getFirst().getFirstName() == firstName && bookingEntity.getFirst().getSecondName() == secondName;
-////        allReservation.
-////        Optional<List<BookingEntity>> myReservations = allReservation.filter(bookingEntityPredicate);
-////        return myReservations;
-////    }
+//    @Override
+//    public Optional<List<BookingEntity>> getMyReservations(String firstName, String secondName) {
+//        List<BookingEntity> allReservation = bookingDao.getAll();
+//        Predicate<List<BookingEntity>> bookingEntityPredicate = bookingEntity -> bookingEntity.getFirst().getFirstName() == firstName && bookingEntity.getFirst().getSecondName() == secondName;
+//
+//        //        Optional<List<BookingEntity>> myReservations = allReservation.filter(bookingEntityPredicate);
+//        return myReservations;
+//    }
 //}
