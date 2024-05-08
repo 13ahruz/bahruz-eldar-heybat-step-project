@@ -10,5 +10,5 @@ public interface BookingService {
 
     boolean cancelAReservation(long id);
 
-    Optional<List<BookingEntity>> getMyReservations(String firstName, String secondName);
+    List<BookingEntity> getMyReservations(String firstName, String secondName);
 }
