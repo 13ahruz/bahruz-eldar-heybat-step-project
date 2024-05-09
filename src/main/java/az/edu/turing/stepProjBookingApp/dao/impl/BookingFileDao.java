@@ -2,12 +2,14 @@ package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
+import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -73,12 +75,13 @@ public class BookingFileDao extends BookingDao {
             if (jsonData != null && !jsonData.isBlank()) {
                 BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
                 x.close();
-                return Arrays.stream(bookings).toList();
+                var tempList = Arrays.asList(bookings);
+                return new ArrayList<>(tempList);
             }
             x.close();
         } catch (IOException e) {
             System.out.println("Error while reading flights from file: " + e.getMessage());
         }
-        return null;
+        return new ArrayList<>();
     }
 }

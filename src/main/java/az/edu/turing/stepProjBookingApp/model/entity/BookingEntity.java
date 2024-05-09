@@ -3,10 +3,13 @@ package az.edu.turing.stepProjBookingApp.model.entity;
 import java.util.Objects;
 
 public class BookingEntity {
-    private final String firstName;
-    private final String secondName;
-    private final long flightId;
-    private final int amount;
+    private String firstName;
+    private String secondName;
+    private long flightId;
+    private int amount;
+
+    public BookingEntity() {
+    }
 
     public BookingEntity(String firstName, String secondName, long flightId, int amount) {
         this.firstName = firstName;

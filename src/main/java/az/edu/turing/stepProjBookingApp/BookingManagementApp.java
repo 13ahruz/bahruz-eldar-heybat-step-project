@@ -49,8 +49,8 @@ public class BookingManagementApp {
                     List<FlightDto> filteredFlights = flightController.getFlightsByLocation(location);
                     if (!filteredFlights.isEmpty()){
                         filteredFlights.forEach(flightDto -> System.out.println("Flight id: " +
-                                flightDto.getFlightId() + " *** Destination: " +
-                                flightDto.getDestination() + " *** Fly time: " +
+                                flightDto.getFlightId() + " || Destination: " +
+                                flightDto.getDestination() + " || Fly time: " +
                                 flightDto.getDateAndTime()));
                     }
                     else {
@@ -60,7 +60,7 @@ public class BookingManagementApp {
                 case 2:
                     System.out.println("Enter flight id: ");
                     int tempChoice = readIntChoice();
-                    System.out.println(flightController.getFlightById(tempChoice).toString());
+                    System.out.println(flightController.getFlightById(tempChoice).get().toString());
                     break;
                 case 3:
                     System.out.println("Enter your firstname: ");
@@ -91,8 +91,13 @@ public class BookingManagementApp {
                     firstName = readStringChoice();
                     System.out.println("Enter your second name: ");
                     secondName = readStringChoice();
-                    bookingController.getMyReservations(firstName, secondName)
-                            .forEach(flight -> System.out.println(flight.toString()));
+                    if (bookingController.getMyReservations(firstName, secondName) != null || !bookingController.getMyReservations(firstName, secondName).isEmpty()){
+                        bookingController.getMyReservations(firstName, secondName)
+                                .forEach(flight -> System.out.println(flight.toString()));
+                    }
+                    else {
+                        System.out.println("You don't have any reservation!");
+                    }
                     break;
                 case 6:
                     System.out.println("Exiting the program ...");
