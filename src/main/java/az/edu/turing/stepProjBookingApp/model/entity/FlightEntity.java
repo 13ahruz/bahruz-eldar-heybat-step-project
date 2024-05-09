@@ -10,6 +10,8 @@ public class FlightEntity {
     private int seats;
     private long flightId;
 
+    public FlightEntity() {
+    }
 
     public FlightEntity(LocalDateTime dateAndTime, String destination, int seats) {
         this.dateAndTime = dateAndTime;

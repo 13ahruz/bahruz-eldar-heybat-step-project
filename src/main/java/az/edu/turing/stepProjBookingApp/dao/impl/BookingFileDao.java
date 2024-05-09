@@ -42,17 +42,17 @@ public class BookingFileDao extends BookingDao {
     }
 
     @Override
-    public Optional<List<BookingEntity>> getAllBy(Predicate<BookingEntity> predicate) {
+    public List<BookingEntity> getAllBy(Predicate<BookingEntity> predicate) {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
             List<BookingEntity> allBookings = objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {
             });
             List<BookingEntity> filteredBookings = allBookings.stream().filter(predicate).toList();
-            return Optional.of(filteredBookings);
+            return filteredBookings;
         } catch (IOException e) {
             System.out.println("Error while loading flights from file: " + e.getMessage());
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class BookingFileDao extends BookingDao {
     }
 
     @Override
-    public Optional<List<BookingEntity>> getAll() {
+    public List<BookingEntity> getAll() {
         try {
             FileReader fr = new FileReader(file);
             BufferedReader x = new BufferedReader(fr);
@@ -78,12 +78,12 @@ public class BookingFileDao extends BookingDao {
             if (jsonData != null && !jsonData.isBlank()) {
                 BookingEntity[] bookings = objectMapper.readValue(jsonData, BookingEntity[].class);
                 x.close();
-                return Optional.of(Arrays.asList(bookings));
+                return Arrays.stream(bookings).toList();
             }
             x.close();
         } catch (IOException e) {
             System.out.println("Error while reading flights from file: " + e.getMessage());
         }
-        return Optional.empty();
+        return null;
     }
 }

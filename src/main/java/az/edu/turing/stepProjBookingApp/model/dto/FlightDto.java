@@ -12,6 +12,12 @@ public class FlightDto {
     public FlightDto() {
     }
 
+    public FlightDto(LocalDateTime dateAndTime, String destination, int seats) {
+        this.dateAndTime = dateAndTime;
+        this.destination = destination;
+        this.seats = seats;
+    }
+
     public FlightDto(LocalDateTime dateAndTime, String destination, int seats, long flightId) {
         this.dateAndTime = dateAndTime;
         this.destination = destination;
