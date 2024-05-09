@@ -29,44 +29,46 @@ public class BookingManagementApp {
     private static final FlightController flightController = new FlightController(flightService);
     public static void main(String[] args) {
         FlightDto flight1 = new FlightDto(
-                LocalDateTime.of(2024, 5, 1, 10, 30), "Kiev", 15);
+                LocalDateTime.of(2024, 5, 1, 10, 30), "Kiev", "Baku", 15);
         FlightDto flight2 = new FlightDto(
-                LocalDateTime.of(2024, 5, 2, 11, 30), "Moscow", 13);
+                LocalDateTime.of(2024, 5, 2, 11, 30), "Kiev", "Salyan", 13);
         FlightDto flight3 = new FlightDto(
-                LocalDateTime.of(2024, 5, 3, 12, 30), "London", 2);
+                LocalDateTime.of(2024, 5, 3, 12, 30), "London", "Bilasuvar republic", 2);
         flightController.createFlight(flight1);
         flightController.createFlight(flight2);
         flightController.createFlight(flight3);
         while (true){
             displayMenu();
-            int choice = readChoice();
+            int choice = readIntChoice();
             String firstName;
             String secondName;
             switch (choice) {
                 case 1:
                     System.out.println("Enter your location: ");
-                    String location = scanner.nextLine();
+                    String location = readStringChoice();
                     List<FlightDto> filteredFlights = flightController.getFlightsByDest(location);
                     if (!filteredFlights.isEmpty()){
-                        filteredFlights.forEach(flightDto -> System.out.println(flightDto.toString()));
+                        filteredFlights.forEach(flightDto -> System.out.println("Flight id: " +
+                                flightDto.getFlightId() + " *** Destination: " +
+                                flightDto.getDestination() + " *** Fly time: " +
+                                flightDto.getDateAndTime()));
                     }
                     else {
-                        System.out.println("No flight from your destination!");
+                        System.out.println("No flights from your destination!");
                     }
-
                     break;
                 case 2:
                     System.out.println("Enter flight id: ");
-                    int tempChoice = readChoice();
+                    int tempChoice = readIntChoice();
                     System.out.println(flightController.getFlightById(tempChoice).toString());
                     break;
                 case 3:
                     System.out.println("Enter your firstname: ");
-                    firstName = scanner.nextLine();
+                    firstName = readStringChoice();
                     System.out.println("Enter your second name: ");
-                    secondName = scanner.nextLine();
+                    secondName = readStringChoice();
                     System.out.println("Enter flight id: ");
-                    int flightIdForBooking = readChoice();
+                    int flightIdForBooking = readIntChoice();
                     if (bookingController.bookAReservation(firstName, secondName, flightIdForBooking)) {
                         System.out.println("Booking successful");
                     } else {
@@ -75,7 +77,7 @@ public class BookingManagementApp {
                     break;
                 case 4:
                     System.out.println("Enter flight ID for cancellation: ");
-                    int flightIdForCancellation = readChoice();
+                    int flightIdForCancellation = readIntChoice();
                     if (bookingController.cancelAReservation(flightIdForCancellation)) {
                         System.out.println("Cancellation successful");
                     } else {
@@ -84,9 +86,9 @@ public class BookingManagementApp {
                     break;
                 case 5:
                     System.out.println("Enter your firstname: ");
-                    firstName = scanner.nextLine();
+                    firstName = readStringChoice();
                     System.out.println("Enter your second name: ");
-                    secondName = scanner.nextLine();
+                    secondName = readStringChoice();
                     bookingController.getMyReservations(firstName, secondName)
                             .forEach(flight -> System.out.println(flight.toString()));
                     break;
@@ -110,11 +112,11 @@ public class BookingManagementApp {
         System.out.println("5. My flights.");
         System.out.println("6. Exit.");
     }
-    private static int readChoice() {
+    private static int readIntChoice() {
         return scanner.nextInt();
+    }
 
-
-
-
+    private static String readStringChoice (){
+        return scanner.next();
     }
 }

@@ -23,7 +23,7 @@ public class FlightServiceImpl implements FlightService {
         List<FlightEntity> allFlights = flightDao.getAll();
         if (allFlights != null) {
             return allFlights.stream()
-                    .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
+                    .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getLocation(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
                     .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
@@ -32,10 +32,10 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getAllByDest(String destination) {
-        Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equals(destination);
+        Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equalsIgnoreCase(destination);
         List<FlightEntity> flights = flightDao.getAllBy(destPredicate);
         return flights.stream()
-                .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
+                .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getLocation(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +46,7 @@ public class FlightServiceImpl implements FlightService {
         Optional<FlightEntity> flightById = flightDao.getOneBy(predicateByName);
         if (flightById.isPresent()) {
             FlightEntity flightEntity = flightById.get();
-            FlightDto flightDto = new FlightDto(flightEntity.getDateAndTime(), flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId());
+            FlightDto flightDto = new FlightDto(flightEntity.getDateAndTime(), flightEntity.getLocation(), flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId());
             return Optional.of(flightDto);
         } else {
             return Optional.empty();
@@ -58,6 +58,7 @@ public class FlightServiceImpl implements FlightService {
     public boolean createFlight(FlightDto flightDto) {
         FlightEntity flightEntity = new FlightEntity(
                 flightDto.getDateAndTime(),
+                flightDto.getLocation(),
                 flightDto.getDestination(),
                 flightDto.getSeats()
         );
