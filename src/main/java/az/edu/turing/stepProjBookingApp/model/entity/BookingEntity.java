@@ -6,11 +6,13 @@ public class BookingEntity {
     private final String firstName;
     private final String secondName;
     private final long flightId;
+    private final int amount;
 
-    public BookingEntity(String firstName, String secondName, long flightId) {
+    public BookingEntity(String firstName, String secondName, long flightId, int amount) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.flightId = flightId;
+        this.amount = amount;
     }
 
     public String getFirstName() {

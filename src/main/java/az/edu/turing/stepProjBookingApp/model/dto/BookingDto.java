@@ -7,10 +7,12 @@ public class BookingDto {
     private final String firstName;
     private final String secondName;
     private long flightId;
+    private int amount;
 
-    public BookingDto(String firstName, String secondName, long flightId) {
+    public BookingDto(String firstName, String secondName, long flightId, int amount) {
         this.firstName = firstName;
         this.secondName = secondName;
+        this.amount = amount;
     }
 
     public String getFirstName() {
