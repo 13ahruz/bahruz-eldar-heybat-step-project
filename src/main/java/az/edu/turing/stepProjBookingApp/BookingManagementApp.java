@@ -22,11 +22,11 @@ import java.util.Scanner;
 public class BookingManagementApp {
     private static final Scanner scanner = new Scanner(System.in);
     private static final BookingDao bookingDao = new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-    private static final BookingService bookingService = new BookingServiceImpl(bookingDao);
-    private static final BookingController bookingController = new BookingController(bookingService);
     private static final FlightDao flightDao = new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
     private static final FlightService flightService = new FlightServiceImpl(flightDao);
     private static final FlightController flightController = new FlightController(flightService);
+    private static final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao);
+    private static final BookingController bookingController = new BookingController(bookingService);
     public static void main(String[] args) {
         FlightDto flight1 = new FlightDto(
                 LocalDateTime.of(2024, 5, 1, 10, 30), "Kiev", "Baku", 15);
@@ -69,7 +69,9 @@ public class BookingManagementApp {
                     secondName = readStringChoice();
                     System.out.println("Enter flight id: ");
                     int flightIdForBooking = readIntChoice();
-                    if (bookingController.bookAReservation(firstName, secondName, flightIdForBooking)) {
+                    System.out.println("Enter amount a seats for booking: ");
+                    int amount = readIntChoice();
+                    if (bookingController.bookAReservation(firstName, secondName, flightIdForBooking, amount)) {
                         System.out.println("Booking successful");
                     } else {
                         System.out.println("Order unsuccessful");

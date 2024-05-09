@@ -15,8 +15,8 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    public boolean bookAReservation(String firstName, String secondName, long flightId) {
-        return bookingService.bookAReservation(firstName, secondName, flightId);
+    public boolean bookAReservation(String firstName, String secondName, long flightId, int amount) {
+        return bookingService.bookAReservation(firstName, secondName, flightId, amount);
     }
 
     public boolean cancelAReservation(long id) {
