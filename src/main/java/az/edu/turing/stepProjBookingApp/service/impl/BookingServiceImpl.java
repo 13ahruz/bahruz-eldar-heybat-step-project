@@ -23,7 +23,7 @@ public class BookingServiceImpl implements BookingService {
         List<BookingEntity> list = bookingDao.getAll();
         List<FlightEntity> flightsList = flightDao.getAll();
         int seats = flightsList.stream().filter(flightEntity -> flightEntity.getFlightId() == flightId).findFirst().get().getSeats();
-        if (amount >= seats){
+        if (amount <= seats){
             BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, amount);
             list.add(bookingEntity);
             seats -= amount;
