@@ -46,7 +46,7 @@ public class BookingManagementApp {
                 case 1:
                     System.out.println("Enter your location: ");
                     String location = readStringChoice();
-                    List<FlightDto> filteredFlights = flightController.getFlightsByDest(location);
+                    List<FlightDto> filteredFlights = flightController.getFlightsByLocation(location);
                     if (!filteredFlights.isEmpty()){
                         filteredFlights.forEach(flightDto -> System.out.println("Flight id: " +
                                 flightDto.getFlightId() + " *** Destination: " +
