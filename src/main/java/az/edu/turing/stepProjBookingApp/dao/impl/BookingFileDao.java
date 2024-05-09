@@ -1,9 +1,7 @@
 package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
-import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
-import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,11 +9,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class BookingFileDao extends BookingDao {
     private static final String RESOURCE_PATH = "C:\\Users\\ROMedia\\IdeaProjects\\bahruz-eldar-heybat-step-project\\src\\main\\java\\az\\edu\\turing\\stepProjBookingApp\\resource\\";
@@ -47,8 +43,7 @@ public class BookingFileDao extends BookingDao {
             byte[] jsonData = Files.readAllBytes(Paths.get(BOOKING_FILE_PATH));
             List<BookingEntity> allBookings = objectMapper.readValue(jsonData, new TypeReference<List<BookingEntity>>() {
             });
-            List<BookingEntity> filteredBookings = allBookings.stream().filter(predicate).toList();
-            return filteredBookings;
+            return allBookings.stream().filter(predicate).toList();
         } catch (IOException e) {
             System.out.println("Error while loading flights from file: " + e.getMessage());
         }

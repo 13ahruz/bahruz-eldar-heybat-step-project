@@ -31,14 +31,14 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<FlightDto> getAllByDest(String destination) {
-        Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equalsIgnoreCase(destination);
-        List<FlightEntity> flights = flightDao.getAllBy(destPredicate);
+    public List<FlightDto> getAllByLocation(String location) {
+        Predicate<FlightEntity> destPredicate = flight -> flight.getLocation().equalsIgnoreCase(location);
+        List<FlightEntity> flights = flightDao.getAll();
+        flights = flights.stream().filter(destPredicate).toList();
         return flights.stream()
                 .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getLocation(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public Optional<FlightDto> getFlightById(long id) {
