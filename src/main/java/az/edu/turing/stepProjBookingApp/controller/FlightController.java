@@ -21,8 +21,8 @@ public class FlightController {
         return flightService.getFlightById(id);
     }
 
-    public List <FlightDto> getFlightsByDest(String dest) {
-        return flightService.getAllByDest(dest);
+    public List <FlightDto> getFlightsByLocation(String location) {
+        return flightService.getAllByLocation(location);
     }
 
     public boolean createFlight(FlightDto flightDto) {
