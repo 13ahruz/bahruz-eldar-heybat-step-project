@@ -5,6 +5,7 @@ import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.FlightService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -19,21 +20,25 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getAllFlights() {
-        List<FlightDto> flightsDto = flightDao.getAll().stream()
-                .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
-                .collect(Collectors.toList());
-        return flightsDto;
+        List<FlightEntity> allFlights = flightDao.getAll();
+        if (allFlights != null) {
+            return allFlights.stream()
+                    .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getLocation(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
-    public List<FlightDto> getAllByDest(String destination) {
-        Predicate<FlightEntity> destPredicate = flight -> flight.getDestination().equals(destination);
-        List<FlightEntity> flights = flightDao.getAllBy(destPredicate);
+    public List<FlightDto> getAllByLocation(String location) {
+        Predicate<FlightEntity> destPredicate = flight -> flight.getLocation().equalsIgnoreCase(location);
+        List<FlightEntity> flights = flightDao.getAll();
+        flights = flights.stream().filter(destPredicate).toList();
         return flights.stream()
-                .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
+                .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getLocation(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public Optional<FlightDto> getFlightById(long id) {
@@ -41,7 +46,7 @@ public class FlightServiceImpl implements FlightService {
         Optional<FlightEntity> flightById = flightDao.getOneBy(predicateByName);
         if (flightById.isPresent()) {
             FlightEntity flightEntity = flightById.get();
-            FlightDto flightDto = new FlightDto(flightEntity.getDateAndTime(), flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId());
+            FlightDto flightDto = new FlightDto(flightEntity.getDateAndTime(), flightEntity.getLocation(), flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId());
             return Optional.of(flightDto);
         } else {
             return Optional.empty();
@@ -53,6 +58,7 @@ public class FlightServiceImpl implements FlightService {
     public boolean createFlight(FlightDto flightDto) {
         FlightEntity flightEntity = new FlightEntity(
                 flightDto.getDateAndTime(),
+                flightDto.getLocation(),
                 flightDto.getDestination(),
                 flightDto.getSeats()
         );

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -73,13 +74,13 @@ public class FlightFileDao extends FlightDao {
             if (jsonData != null && !jsonData.isBlank()) {
                 FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
                 x.close();
-                return Arrays.asList(flights);
+                var tempList = Arrays.asList(flights);
+                return new ArrayList<>(tempList);
             }
             x.close();
         } catch (IOException e) {
             System.out.println("Error while reading flights from file: " + e.getMessage());
         }
-        return null;
+        return new ArrayList<>();
     }
-
 }

@@ -23,7 +23,7 @@ public class BookingController {
         return bookingService.cancelAReservation(id);
     }
 
-    public Optional<List<BookingEntity>> getMyReservations(String firstName, String secondName) {
+    public List<BookingEntity> getMyReservations(String firstName, String secondName) {
         return bookingService.getMyReservations(firstName, secondName);
     }
 

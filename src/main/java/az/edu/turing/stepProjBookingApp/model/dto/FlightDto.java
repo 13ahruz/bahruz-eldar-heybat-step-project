@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class FlightDto {
     private LocalDateTime dateAndTime;
+    private String location;
     private String destination;
     private int seats;
     private long flightId;
@@ -12,8 +13,16 @@ public class FlightDto {
     public FlightDto() {
     }
 
-    public FlightDto(LocalDateTime dateAndTime, String destination, int seats, long flightId) {
+    public FlightDto(LocalDateTime dateAndTime, String location, String destination, int seats) {
         this.dateAndTime = dateAndTime;
+        this.location = location;
+        this.destination = destination;
+        this.seats = seats;
+    }
+
+    public FlightDto(LocalDateTime dateAndTime, String location, String destination, int seats, long flightId) {
+        this.dateAndTime = dateAndTime;
+        this.location = location;
         this.destination = destination;
         this.seats = seats;
         this.flightId = flightId;
@@ -29,6 +38,14 @@ public class FlightDto {
 
     public int getSeats() {
         return seats;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public long getFlightId() {

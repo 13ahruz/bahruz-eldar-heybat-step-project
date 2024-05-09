@@ -6,13 +6,17 @@ import java.util.Objects;
 public class FlightEntity {
     private static long nextId = 1;
     private LocalDateTime dateAndTime;
+    private String location;
     private String destination;
     private int seats;
     private long flightId;
 
+    public FlightEntity() {
+    }
 
-    public FlightEntity(LocalDateTime dateAndTime, String destination, int seats) {
+    public FlightEntity(LocalDateTime dateAndTime, String location, String destination, int seats) {
         this.dateAndTime = dateAndTime;
+        this.location = location;
         this.destination = destination;
         this.seats = seats;
         this.flightId = generateUniqueId();
@@ -34,7 +38,13 @@ public class FlightEntity {
         this.seats = seats;
     }
 
+    public String getLocation() {
+        return location;
+    }
 
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public LocalDateTime getDateAndTime() {
         return dateAndTime;
