@@ -8,6 +8,7 @@ import az.edu.turing.stepProjBookingApp.dao.impl.BookingFileDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.FlightFileDao;
 import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
 import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
+import az.edu.turing.stepProjBookingApp.exception.NotAValidFlightException;
 import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
@@ -77,7 +78,7 @@ public class BookingManagementApp {
                         bookingController.bookAReservation(firstName, secondName, flightIdForBooking, amount);
                             System.out.println("Booking successful");
                     }
-                    catch (NoEnoughSeatsException e){
+                    catch (NoEnoughSeatsException | NotAValidFlightException e){
                         System.out.println(e.getMessage());
                     }
                     break;

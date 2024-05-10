@@ -1,6 +1,7 @@
 package az.edu.turing.stepProjBookingApp.service.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
+import az.edu.turing.stepProjBookingApp.exception.NotAValidFlightException;
 import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.FlightService;

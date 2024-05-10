@@ -4,6 +4,7 @@ import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
 import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
 import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
+import az.edu.turing.stepProjBookingApp.exception.NotAValidFlightException;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
@@ -21,9 +22,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean bookAReservation(String firstName, String secondName, long flightId, int amount) {
+    public boolean bookAReservation(String firstName, String secondName, long flightId, int amount) throws NotAValidFlightException, NoEnoughSeatsException {
         List<BookingEntity> list = bookingDao.getAll();
         List<FlightEntity> flightsList = flightDao.getAll();
+        if (flightsList.stream().noneMatch(flightEntity -> flightEntity.getFlightId() == flightId)){
+            throw new NotAValidFlightException("It is not a valid flight!");
+        }
+        else{
         int seats = flightsList.stream().filter(flightEntity -> flightEntity.getFlightId() == flightId).findFirst().get().getSeats();
         if (amount > seats) {
             throw new NoEnoughSeatsException("No enough available seats!");
@@ -34,6 +39,7 @@ public class BookingServiceImpl implements BookingService {
         flightsList.stream().filter(flightEntity -> flightEntity.getFlightId() == flightId).findFirst().get().setSeats(seats);
         flightDao.save(flightsList);
         return bookingDao.save(list);
+        }
     }
 
     @Override
