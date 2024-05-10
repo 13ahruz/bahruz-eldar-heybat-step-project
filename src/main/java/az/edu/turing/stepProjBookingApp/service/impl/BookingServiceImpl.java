@@ -2,6 +2,8 @@ package az.edu.turing.stepProjBookingApp.service.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
+import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
+import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
@@ -23,27 +25,41 @@ public class BookingServiceImpl implements BookingService {
         List<BookingEntity> list = bookingDao.getAll();
         List<FlightEntity> flightsList = flightDao.getAll();
         int seats = flightsList.stream().filter(flightEntity -> flightEntity.getFlightId() == flightId).findFirst().get().getSeats();
-        if (amount <= seats){
-            BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, amount);
-            list.add(bookingEntity);
-            seats -= amount;
-            flightsList.stream().filter(flightEntity -> flightEntity.getFlightId() == flightId).findFirst().get().setSeats(seats);
-            flightDao.save(flightsList);
+        if (amount > seats) {
+            throw new NoEnoughSeatsException("No enough available seats!");
         }
+        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, amount);
+        list.add(bookingEntity);
+        seats -= amount;
+        flightsList.stream().filter(flightEntity -> flightEntity.getFlightId() == flightId).findFirst().get().setSeats(seats);
+        flightDao.save(flightsList);
         return bookingDao.save(list);
     }
 
     @Override
-    public boolean cancelAReservation(long id) {
+    public boolean cancelAReservation(String firstName, String secondName, long id) throws NoSuchReservationException {
         List<BookingEntity> allReservation = bookingDao.getAll();
-        Predicate<BookingEntity> removingPredicate = bookingEntity -> bookingEntity.getFlightId() == id;
-        allReservation.remove(removingPredicate);
-        return bookingDao.save(allReservation);
+            Predicate<BookingEntity> removingPredicate = bookingEntity ->
+                    bookingEntity.getFlightId() == id &&
+                            bookingEntity.getFirstName().equalsIgnoreCase(firstName) &&
+                            bookingEntity.getSecondName().equalsIgnoreCase(secondName);
+            if (allReservation.remove(removingPredicate)){
+                return bookingDao.save(allReservation);
+            }
+            else {
+                throw  new NoSuchReservationException("There is no reservation matches your input! ");
+            }
     }
 
     @Override
-    public List<BookingEntity> getMyReservations(String firstName, String secondName) {
+    public List<BookingEntity> getMyReservations(String firstName, String secondName) throws NoSuchReservationException{
         List<BookingEntity> allReservation = bookingDao.getAll();
-        return allReservation.stream().filter(bookingEntity -> bookingEntity.getFirstName().equals(firstName) && bookingEntity.getSecondName().equals(secondName)).toList();
+        List <BookingEntity> myReservations = allReservation.stream().filter(bookingEntity -> bookingEntity.getFirstName().equals(firstName) && bookingEntity.getSecondName().equals(secondName)).toList();
+        if (!myReservations.isEmpty()){
+            return myReservations;
+        }
+        else {
+            throw new NoSuchReservationException("You dont have any reservation!");
+        }
     }
 }
