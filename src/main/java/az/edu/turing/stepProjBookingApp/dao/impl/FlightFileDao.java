@@ -56,7 +56,6 @@ public class FlightFileDao extends FlightDao {
         try {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
             FlightEntity[] flights = objectMapper.readValue(jsonData, FlightEntity[].class);
-
             Optional<FlightEntity> oneFlight = Arrays.stream(flights).filter(predicate).findFirst();
             return oneFlight;
         } catch (IOException e) {
