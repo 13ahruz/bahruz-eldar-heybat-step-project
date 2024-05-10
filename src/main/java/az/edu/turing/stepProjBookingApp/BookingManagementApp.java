@@ -6,6 +6,8 @@ import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.BookingFileDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.FlightFileDao;
+import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
+import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
 import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
@@ -63,27 +65,34 @@ public class BookingManagementApp {
                     System.out.println(flightController.getFlightById(tempChoice).get().toString());
                     break;
                 case 3:
-                    System.out.println("Enter your firstname: ");
-                    firstName = readStringChoice();
-                    System.out.println("Enter your second name: ");
-                    secondName = readStringChoice();
-                    System.out.println("Enter flight id: ");
-                    int flightIdForBooking = readIntChoice();
-                    System.out.println("Enter amount a seats for booking: ");
-                    int amount = readIntChoice();
-                    if (bookingController.bookAReservation(firstName, secondName, flightIdForBooking, amount)) {
-                        System.out.println("Booking successful");
-                    } else {
-                        System.out.println("Order unsuccessful");
+                    try {
+                        System.out.println("Enter your firstname: ");
+                        firstName = readStringChoice();
+                        System.out.println("Enter your second name: ");
+                        secondName = readStringChoice();
+                        System.out.println("Enter flight id: ");
+                        int flightIdForBooking = readIntChoice();
+                        System.out.println("Enter amount a seats for booking: ");
+                        int amount = readIntChoice();
+                        bookingController.bookAReservation(firstName, secondName, flightIdForBooking, amount);
+                            System.out.println("Booking successful");
+                    }
+                    catch (NoEnoughSeatsException e){
+                        System.out.println(e.getMessage());
                     }
                     break;
                 case 4:
+                    System.out.println("Enter your first name: ");
+                    firstName = readStringChoice();
+                    System.out.println("Enter your second name: ");
+                    secondName = readStringChoice();
                     System.out.println("Enter flight ID for cancellation: ");
                     int flightIdForCancellation = readIntChoice();
-                    if (bookingController.cancelAReservation(flightIdForCancellation)) {
+                    try {
+                        bookingController.cancelAReservation(firstName, secondName, flightIdForCancellation);
                         System.out.println("Cancellation successful");
-                    } else {
-                        System.out.println("Cancellation unsuccessful");
+                    }catch (NoSuchReservationException e){
+                        System.out.println(e.getMessage());
                     }
                     break;
                 case 5:
@@ -91,12 +100,11 @@ public class BookingManagementApp {
                     firstName = readStringChoice();
                     System.out.println("Enter your second name: ");
                     secondName = readStringChoice();
-                    if (bookingController.getMyReservations(firstName, secondName) != null || !bookingController.getMyReservations(firstName, secondName).isEmpty()){
-                        bookingController.getMyReservations(firstName, secondName)
-                                .forEach(flight -> System.out.println(flight.toString()));
+                    try{
+                        bookingController.getMyReservations(firstName, secondName);
                     }
-                    else {
-                        System.out.println("You don't have any reservation!");
+                    catch (NoSuchReservationException e){
+                        System.out.println(e.getMessage());
                     }
                     break;
                 case 6:

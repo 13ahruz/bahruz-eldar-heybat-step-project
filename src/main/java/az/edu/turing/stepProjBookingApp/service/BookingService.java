@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface BookingService {
     boolean bookAReservation(String firstName, String secondName, long flightId, int amount);
 
-    boolean cancelAReservation(long id);
+    boolean cancelAReservation(String firstName, String secondName, long id);
 
     List<BookingEntity> getMyReservations(String firstName, String secondName);
 }
