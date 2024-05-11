@@ -10,7 +10,6 @@ import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
 import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
 import az.edu.turing.stepProjBookingApp.exception.NotAValidFlightException;
 import az.edu.turing.stepProjBookingApp.model.dto.FlightDto;
-import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
 import az.edu.turing.stepProjBookingApp.service.FlightService;
 import az.edu.turing.stepProjBookingApp.service.impl.BookingServiceImpl;
@@ -30,6 +29,7 @@ public class BookingManagementApp {
     private static final FlightController flightController = new FlightController(flightService);
     private static final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao);
     private static final BookingController bookingController = new BookingController(bookingService);
+
     public static void main(String[] args) {
         FlightDto flight1 = new FlightDto(
                 LocalDateTime.of(2024, 5, 1, 10, 30), "Kiev", "Baku", 15);
@@ -40,7 +40,7 @@ public class BookingManagementApp {
         flightController.createFlight(flight1);
         flightController.createFlight(flight2);
         flightController.createFlight(flight3);
-        while (true){
+        while (true) {
             displayMenu();
             int choice = readIntChoice();
             String firstName;
@@ -49,14 +49,13 @@ public class BookingManagementApp {
                 case 1:
                     System.out.println("Enter your location: ");
                     String location = readStringChoice();
-                    List<FlightDto> filteredFlights = flightController.getFlightsByLocation(location);
-                    if (!filteredFlights.isEmpty()){
+                    List<FlightDto> filteredFlights = flightController.getFlightsByLocationIn24Hours(location);
+                    if (!filteredFlights.isEmpty()) {
                         filteredFlights.forEach(flightDto -> System.out.println("Flight id: " +
                                 flightDto.getFlightId() + " || Destination: " +
                                 flightDto.getDestination() + " || Fly time: " +
                                 flightDto.getDateAndTime()));
-                    }
-                    else {
+                    } else {
                         System.out.println("No flights from your destination!");
                     }
                     break;
@@ -76,9 +75,8 @@ public class BookingManagementApp {
                         System.out.println("Enter amount a seats for booking: ");
                         int amount = readIntChoice();
                         bookingController.bookAReservation(firstName, secondName, flightIdForBooking, amount);
-                            System.out.println("Booking successful");
-                    }
-                    catch (NoEnoughSeatsException | NotAValidFlightException e){
+                        System.out.println("Booking successful");
+                    } catch (NoEnoughSeatsException | NotAValidFlightException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -92,7 +90,7 @@ public class BookingManagementApp {
                     try {
                         bookingController.cancelAReservation(firstName, secondName, flightIdForCancellation);
                         System.out.println("Cancellation successful");
-                    }catch (NoSuchReservationException e){
+                    } catch (NoSuchReservationException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -101,10 +99,9 @@ public class BookingManagementApp {
                     firstName = readStringChoice();
                     System.out.println("Enter your second name: ");
                     secondName = readStringChoice();
-                    try{
+                    try {
                         bookingController.getMyReservations(firstName, secondName);
-                    }
-                    catch (NoSuchReservationException e){
+                    } catch (NoSuchReservationException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -118,7 +115,6 @@ public class BookingManagementApp {
     }
 
 
-
     private static void displayMenu() {
         System.out.println("Menu:");
         System.out.println("1. Online-board.");
@@ -128,11 +124,12 @@ public class BookingManagementApp {
         System.out.println("5. My flights.");
         System.out.println("6. Exit.");
     }
+
     private static int readIntChoice() {
         return scanner.nextInt();
     }
 
-    private static String readStringChoice (){
+    private static String readStringChoice() {
         return scanner.next();
     }
 }
