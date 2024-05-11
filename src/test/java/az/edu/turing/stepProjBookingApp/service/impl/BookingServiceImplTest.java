@@ -5,6 +5,7 @@ import az.edu.turing.stepProjBookingApp.dao.FlightDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.BookingFileDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.FlightFileDao;
 import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
+import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BookingServiceImplTest {
@@ -58,6 +58,7 @@ class BookingServiceImplTest {
             bookingService.bookAReservation(firstName, secondName, flightId, amount);
         });
     }
+
     @Test
     void testBookAReservation_SaveData() {
         LocalDateTime customDateTime = LocalDateTime.of(2024, 5, 2, 11, 30);
@@ -91,9 +92,83 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void cancelAReservation() {
+    void testCancelAReservation_NonExistingReservation() {
+        BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
+        String firstName = "Heybat";
+        String secondName = "MOvlamov";
+        long id = 1;
+
+        List<BookingEntity> bookingList = new ArrayList<>();
+
+        when(bookingDao.getAll()).thenReturn(bookingList);
+
+        assertThrows(NoSuchReservationException.class, () -> {
+            bookingService.cancelAReservation(firstName, secondName, id);
+        });
+
+        verify(bookingDao, never()).save(anyList());
     }
 
+    @Test
+    void testCancelAReservation() throws NoSuchReservationException {//todo update this method . not working
+        BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
+        String firstName = "Heybat";
+        String secondName = "Movlamov";
+        long flightId = 1;
+
+        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, 1);
+
+        List<BookingEntity> bookingList = new ArrayList<>();
+        bookingList.add(bookingEntity);
+
+        when(bookingDao.getAll()).thenReturn(bookingList);
+
+        when(bookingDao.save(bookingList)).thenReturn(true);
+
+        boolean result = bookingService.cancelAReservation(firstName, secondName, flightId);
+
+        assertTrue(result);
+
+        verify(bookingDao, times(1)).save(bookingList);
+
+        assertTrue(bookingList.isEmpty());
+    }
+
+    @Test
+    void testGetMyReservations_ExistingReservations() throws NoSuchReservationException {
+        BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
+        String firstName = "Heybat";
+        String secondName = "Movlamov";
+
+        BookingEntity bookingEntity1 = new BookingEntity(firstName, secondName, 1, 1);
+        BookingEntity bookingEntity2 = new BookingEntity(firstName, secondName, 2, 1);
+
+        List<BookingEntity> bookingList = new ArrayList<>();
+        bookingList.add(bookingEntity1);
+        bookingList.add(bookingEntity2);
+
+        when(bookingDao.getAll()).thenReturn(bookingList);
+
+        List<BookingEntity> result = bookingService.getMyReservations(firstName, secondName);
+
+        assertEquals(2, result.size()); // İki rezervasyon olmalı
+
+        verify(bookingDao, times(1)).getAll();
+    }
+    @Test
+    void testGetMyReservations_NonExistingReservations() {
+        BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
+        String firstName = "Heybat";
+        String secondName = "Movlamov";
+
+        List<BookingEntity> bookingList = new ArrayList<>();
+
+        when(bookingDao.getAll()).thenReturn(bookingList);
+
+        assertThrows(NoSuchReservationException.class, () -> {
+            bookingService.getMyReservations(firstName, secondName);
+        });
+    }
 //    @Test
 //    void getMyReservations() {
 //        FlightFileDao daoFlight = Mockito.mock(FlightFileDao.class);
