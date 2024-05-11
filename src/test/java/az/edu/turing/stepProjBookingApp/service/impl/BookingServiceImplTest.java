@@ -63,37 +63,29 @@ class BookingServiceImplTest {
         LocalDateTime customDateTime = LocalDateTime.of(2024, 5, 2, 11, 30);
         BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
 
-        // Önceden belirlenmiş birkaç örnek veri
         String firstName = "John";
         String secondName = "Doe";
         long flightId = 1;
-        int amount = 2; // Rezervasyon yapılacak koltuk sayısı
+        int amount = 2;
 
-        // FlightEntity listesi oluşturulur ve örnek bir FlightEntity eklenir
         List<FlightEntity> flightsList = new ArrayList<>();
         FlightEntity flightEntity = new FlightEntity(customDateTime, "Kiev", "Baku", 30); // FlightEntity örneği
         flightsList.add(flightEntity);
 
-        // BookingEntity listesi oluşturulur ve örnek bir BookingEntity eklenir
         List<BookingEntity> bookingList = new ArrayList<>();
         BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, amount); // BookingEntity örneği
         bookingList.add(bookingEntity);
 
-        // FlightDao mock'lanır ve save metodu için beklenen davranış belirlenir
         when(flightDao.getAll()).thenReturn(flightsList);
         when(flightDao.save(flightsList)).thenReturn(true);
 
-        // BookingDao mock'lanır ve save metodu için beklenen davranış belirlenir
         when(bookingDao.getAll()).thenReturn(bookingList);
         when(bookingDao.save(bookingList)).thenReturn(true);
 
-        // Metodu çağırarak geri dönüş değerini alırız
         boolean result = bookingService.bookAReservation(firstName, secondName, flightId, amount);
 
-        // Metodun beklenen davranışı gerçekleştirip gerçekleştirmediğini kontrol ederiz
-        assertTrue(result); // Geri dönüş değeri true olmalı
+        assertTrue(result);
 
-        // FlightDao.save() ve BookingDao.save() metodlarının bir kez çağrıldığını kontrol ederiz
         verify(flightDao, times(1)).save(flightsList);
         verify(bookingDao, times(1)).save(bookingList);
     }
