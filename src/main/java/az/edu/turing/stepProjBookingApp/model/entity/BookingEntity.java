@@ -7,6 +7,8 @@ public class BookingEntity {
     private String secondName;
     private long flightId;
     private int amount;
+    private long bookingId;
+    public static long MAX_BOOKING_ID = 1;
 
     public BookingEntity() {
     }
@@ -16,6 +18,7 @@ public class BookingEntity {
         this.secondName = secondName;
         this.flightId = flightId;
         this.amount = amount;
+        this.bookingId = MAX_BOOKING_ID++;
     }
 
     public String getFirstName() {
@@ -45,7 +48,7 @@ public class BookingEntity {
 
     @Override
     public String toString() {
-        return "firstName='%s', secondName='%s', flightId=%d}"
-                .formatted(firstName, secondName, flightId);
+        return "First name: '%s' || Second name: '%s' || "
+                .formatted(firstName, secondName);
     }
 }

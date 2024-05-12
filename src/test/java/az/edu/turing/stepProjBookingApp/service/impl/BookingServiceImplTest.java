@@ -32,7 +32,6 @@ class BookingServiceImplTest {
         when(flightDao.getAll()).thenReturn(Arrays.asList(flight1, flight2));
         when(bookingDao.getAll()).thenReturn(List.of(bookingEntity));
         Mockito.doReturn(bookingEntity.getFirstName().equals("Heybat"));
-
     }
 
     @Test

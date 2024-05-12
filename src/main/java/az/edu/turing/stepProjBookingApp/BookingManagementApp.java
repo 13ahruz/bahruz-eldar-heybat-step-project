@@ -32,11 +32,11 @@ public class BookingManagementApp {
 
     public static void main(String[] args) {
         FlightDto flight1 = new FlightDto(
-                LocalDateTime.of(2024, 5, 12, 10, 30), "Kiev", "Baku", 15);
+                LocalDateTime.of(2024, 5, 13, 10, 30), "Kiev", "Baku", 15);
         FlightDto flight2 = new FlightDto(
-                LocalDateTime.of(2024, 5, 12, 11, 30), "Kiev", "Salyan", 13);
+                LocalDateTime.of(2024, 5, 13, 11, 30), "Kiev", "Salyan", 13);
         FlightDto flight3 = new FlightDto(
-                LocalDateTime.of(2024, 5, 12, 12, 30), "London", "Bilasuvar republic", 2);
+                LocalDateTime.of(2024, 5, 13, 12, 30), "London", "Bilasuvar republic", 2);
         flightController.createFlight(flight1);
         flightController.createFlight(flight2);
         flightController.createFlight(flight3);
@@ -100,7 +100,7 @@ public class BookingManagementApp {
                     System.out.println("Enter your second name: ");
                     secondName = readStringChoice();
                     try {
-                        bookingController.getMyReservations(firstName, secondName);
+                        bookingController.getMyReservations(firstName, secondName).forEach(bookingEntity -> System.out.println(bookingEntity.toString() + flightService.getFlightById(bookingEntity.getFlightId()).get()));
                     } catch (NoSuchReservationException e) {
                         System.out.println(e.getMessage());
                     }
