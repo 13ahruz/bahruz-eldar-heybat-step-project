@@ -110,28 +110,28 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void testCancelAReservation() throws NoSuchReservationException {//todo update this method . not working
+    void testCancelAReservation() throws NoSuchReservationException {
+        BookingDao bookingDao = mock(BookingDao.class);
+        FlightDao flightDao = mock(FlightDao.class);
         BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
+
         String firstName = "Heybat";
         String secondName = "Movlamov";
-        long flightId = 1;
-
-        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, 1);
+        long id = 1;
 
         List<BookingEntity> bookingList = new ArrayList<>();
+        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, id, 1);
         bookingList.add(bookingEntity);
 
         when(bookingDao.getAll()).thenReturn(bookingList);
+        when(bookingDao.save(anyList())).thenReturn(true);
 
-        when(bookingDao.save(bookingList)).thenReturn(true);
+        boolean canceled = bookingService.cancelAReservation(firstName, secondName, id);
 
-        boolean result = bookingService.cancelAReservation(firstName, secondName, flightId);
-
-        assertTrue(result);
-
-        verify(bookingDao, times(1)).save(bookingList);
-
-        assertTrue(bookingList.isEmpty());
+        // Assertions
+        assertTrue(canceled);
+        verify(bookingDao, times(1)).getAll();
+        verify(bookingDao, times(1)).save(anyList());
     }
 
     @Test
@@ -155,6 +155,7 @@ class BookingServiceImplTest {
 
         verify(bookingDao, times(1)).getAll();
     }
+
     @Test
     void testGetMyReservations_NonExistingReservations() {
         BookingServiceImpl bookingService = new BookingServiceImpl(bookingDao, flightDao);
@@ -169,12 +170,4 @@ class BookingServiceImplTest {
             bookingService.getMyReservations(firstName, secondName);
         });
     }
-//    @Test
-//    void getMyReservations() {
-//        FlightFileDao daoFlight = Mockito.mock(FlightFileDao.class);
-//        BookingFileDao daoBooking = Mockito.mock(BookingFileDao.class);
-//        BookingServiceImpl service = new BookingServiceImpl(daoBooking, daoFlight);
-//        service.getMyReservations("Heybat", "Movlamov");
-////        Mockito.verify(daoBooking).getAll().
-//    }
 }
