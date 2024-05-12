@@ -2,7 +2,6 @@ package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
-import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

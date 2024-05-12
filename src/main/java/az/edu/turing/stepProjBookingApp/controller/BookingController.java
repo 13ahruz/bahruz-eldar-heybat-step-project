@@ -1,13 +1,9 @@
 package az.edu.turing.stepProjBookingApp.controller;
 
-import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
-import az.edu.turing.stepProjBookingApp.model.dto.BookingDto;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class BookingController {
     private final BookingService bookingService;

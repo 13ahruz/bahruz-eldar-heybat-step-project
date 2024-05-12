@@ -32,11 +32,11 @@ public class BookingManagementApp {
 
     public static void main(String[] args) {
         FlightDto flight1 = new FlightDto(
-                LocalDateTime.of(2024, 5, 1, 10, 30), "Kiev", "Baku", 15);
+                LocalDateTime.of(2024, 5, 12, 10, 30), "Kiev", "Baku", 15);
         FlightDto flight2 = new FlightDto(
-                LocalDateTime.of(2024, 5, 2, 11, 30), "Kiev", "Salyan", 13);
+                LocalDateTime.of(2024, 5, 12, 11, 30), "Kiev", "Salyan", 13);
         FlightDto flight3 = new FlightDto(
-                LocalDateTime.of(2024, 5, 3, 12, 30), "London", "Bilasuvar republic", 2);
+                LocalDateTime.of(2024, 5, 12, 12, 30), "London", "Bilasuvar republic", 2);
         flightController.createFlight(flight1);
         flightController.createFlight(flight2);
         flightController.createFlight(flight3);
