@@ -48,7 +48,7 @@ class BookingServiceImplTest {
         int amount = 13;
 
         List<FlightEntity> flightsList = new ArrayList<>();
-        FlightEntity flightEntity = new FlightEntity(customDateTime, "Kiev", "Baku", 1); // Assuming there are 1 seats available
+        FlightEntity flightEntity = new FlightEntity(customDateTime, "Kiev", "Baku", 1);
         flightsList.add(flightEntity);
 
         when(flightDao.getAll()).thenReturn(flightsList);
@@ -69,11 +69,11 @@ class BookingServiceImplTest {
         int amount = 2;
 
         List<FlightEntity> flightsList = new ArrayList<>();
-        FlightEntity flightEntity = new FlightEntity(customDateTime, "Kiev", "Baku", 30); // FlightEntity örneği
+        FlightEntity flightEntity = new FlightEntity(customDateTime, "Kiev", "Baku", 30);
         flightsList.add(flightEntity);
 
         List<BookingEntity> bookingList = new ArrayList<>();
-        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, amount); // BookingEntity örneği
+        BookingEntity bookingEntity = new BookingEntity(firstName, secondName, flightId, amount);
         bookingList.add(bookingEntity);
 
         when(flightDao.getAll()).thenReturn(flightsList);
@@ -127,7 +127,6 @@ class BookingServiceImplTest {
 
         boolean canceled = bookingService.cancelAReservation(firstName, secondName, id);
 
-        // Assertions
         assertTrue(canceled);
         verify(bookingDao, times(1)).getAll();
         verify(bookingDao, times(1)).save(anyList());
@@ -150,7 +149,7 @@ class BookingServiceImplTest {
 
         List<BookingEntity> result = bookingService.getMyReservations(firstName, secondName);
 
-        assertEquals(2, result.size()); // İki rezervasyon olmalı
+        assertEquals(2, result.size());
 
         verify(bookingDao, times(1)).getAll();
     }
