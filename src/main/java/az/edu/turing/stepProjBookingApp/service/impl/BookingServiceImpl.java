@@ -63,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingEntity> getMyReservations(String firstName, String secondName) throws NoSuchReservationException {
         List<BookingEntity> allReservation = bookingDao.getAll();
-        List<BookingEntity> myReservations = allReservation.stream().filter(bookingEntity -> bookingEntity.getFirstName().equals(firstName) && bookingEntity.getSecondName().equals(secondName)).toList();
+        List<BookingEntity> myReservations = allReservation.stream().filter(bookingEntity -> bookingEntity.getFirstName().equalsIgnoreCase(firstName) && bookingEntity.getSecondName().equalsIgnoreCase(secondName)).toList();
         if (!myReservations.isEmpty()) {
             return myReservations;
         } else {

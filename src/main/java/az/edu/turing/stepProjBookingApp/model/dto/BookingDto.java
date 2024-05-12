@@ -3,16 +3,17 @@ package az.edu.turing.stepProjBookingApp.model.dto;
 import java.util.Objects;
 
 public class BookingDto {
-    //TODO generate unique ids
     private final String firstName;
     private final String secondName;
     private long flightId;
     private int amount;
+    private long bookingId;
 
-    public BookingDto(String firstName, String secondName, long flightId, int amount) {
+    public BookingDto(String firstName, String secondName, long flightId, int amount, long bookingId) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.amount = amount;
+        this.bookingId = bookingId;
     }
 
     public String getFirstName() {
@@ -42,7 +43,7 @@ public class BookingDto {
 
     @Override
     public String toString() {
-        return "firstName='%s', secondName='%s', flightId=%d}"
-                .formatted(firstName, secondName, flightId);
+        return "First name: '%s' || Second name: '%s' || "
+                .formatted(firstName, secondName);
     }
 }
