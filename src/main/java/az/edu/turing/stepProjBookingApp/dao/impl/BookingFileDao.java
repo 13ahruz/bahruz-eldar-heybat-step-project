@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class BookingFileDao extends BookingDao {
-    private static final String RESOURCE_PATH = "C:\\Users\\ROMedia\\IdeaProjects\\bahruz-eldar-heybat-step-project\\src\\main\\java\\az\\edu\\turing\\stepProjBookingApp\\resource\\";
+    private static final String RESOURCE_PATH = "src/main/java/az/edu/turing/stepProjBookingApp/resource/";
     private static final String BOOKING_FILE_PATH = RESOURCE_PATH.concat("bookings.json");
     private static final File file = new File(BOOKING_FILE_PATH);
     private final ObjectMapper objectMapper;
