@@ -22,6 +22,21 @@ public class FlightEntity {
         this.flightId = generateUniqueId();
     }
 
+    public FlightEntity(long id, int seats, LocalDateTime dateAndTime, String location, String destination) {
+        this.dateAndTime = dateAndTime;
+        this.location = location;
+        this.destination = destination;
+        this.seats = seats;
+        this.flightId = id;
+    }
+
+    public FlightEntity(int seats, LocalDateTime dateAndTime, String location, String destination) {
+        this.dateAndTime = dateAndTime;
+        this.location = location;
+        this.destination = destination;
+        this.seats = seats;
+    }
+
     private synchronized long generateUniqueId() {
         return nextId++;
     }
