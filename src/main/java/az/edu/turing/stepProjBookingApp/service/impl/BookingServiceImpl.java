@@ -9,6 +9,7 @@ import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import az.edu.turing.stepProjBookingApp.model.entity.FlightEntity;
 import az.edu.turing.stepProjBookingApp.service.BookingService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -23,7 +24,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean bookAReservation(String firstName, String secondName, long flightId, int amount) throws NotAValidFlightException, NoEnoughSeatsException {
-        List<BookingEntity> list = bookingDao.getAll();
+        List<BookingEntity> list = new ArrayList<>();
         List<FlightEntity> flightsList = flightDao.getAll();
         if (flightsList.stream().noneMatch(flightEntity -> flightEntity.getFlightId() == flightId)) {
             throw new NotAValidFlightException("It is not a valid flight!");

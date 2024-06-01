@@ -5,7 +5,9 @@ import az.edu.turing.stepProjBookingApp.controller.FlightController;
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.dao.FlightDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.BookingFileDao;
+import az.edu.turing.stepProjBookingApp.dao.impl.BookingPostgresDao;
 import az.edu.turing.stepProjBookingApp.dao.impl.FlightFileDao;
+import az.edu.turing.stepProjBookingApp.dao.impl.FlightPostgresDao;
 import az.edu.turing.stepProjBookingApp.exception.NoEnoughSeatsException;
 import az.edu.turing.stepProjBookingApp.exception.NoSuchReservationException;
 import az.edu.turing.stepProjBookingApp.exception.NotAValidFlightException;
@@ -23,8 +25,10 @@ import java.util.Scanner;
 
 public class BookingManagementApp {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final BookingDao bookingDao = new BookingFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
-    private static final FlightDao flightDao = new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+    private static final BookingDao bookingDao = new BookingPostgresDao();
+            //new BookingPostgresDao(new ObjectMapper().registerModule(new JavaTimeModule()));
+    private static final FlightDao flightDao = new FlightPostgresDao();
+                    //new FlightFileDao(new ObjectMapper().registerModule(new JavaTimeModule()));
     private static final FlightService flightService = new FlightServiceImpl(flightDao);
     private static final FlightController flightController = new FlightController(flightService);
     private static final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao);

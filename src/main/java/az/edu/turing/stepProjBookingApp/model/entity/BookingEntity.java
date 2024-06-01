@@ -21,6 +21,22 @@ public class BookingEntity {
         this.bookingId = MAX_BOOKING_ID++;
     }
 
+    public BookingEntity(long id, String firstName, String secondName, long flightId, int amount) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.flightId = flightId;
+        this.amount = amount;
+        this.bookingId = id;
+    }
+
+    public BookingEntity(String firstName, String secondName, int amount, long flightId) {
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.flightId = flightId;
+        this.amount = amount;
+    }
+
+
     public String getFirstName() {
         return firstName;
     }
@@ -32,6 +48,8 @@ public class BookingEntity {
     public long getFlightId() {
         return flightId;
     }
+
+    public int getAmount () { return amount;}
 
     @Override
     public boolean equals(Object o) {
