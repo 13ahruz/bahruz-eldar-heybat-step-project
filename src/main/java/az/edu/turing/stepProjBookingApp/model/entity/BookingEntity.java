@@ -1,10 +1,10 @@
 package az.edu.turing.stepProjBookingApp.model.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 public class BookingEntity {
-    private String firstName;
-    private String secondName;
+    private String [] passangers;
     private long flightId;
     private int amount;
     private long bookingId;
@@ -13,60 +13,62 @@ public class BookingEntity {
     public BookingEntity() {
     }
 
-    public BookingEntity(String firstName, String secondName, long flightId, int amount) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public BookingEntity(String [] passangers, long flightId, int amount) {
+        this.passangers = passangers;
         this.flightId = flightId;
         this.amount = amount;
         this.bookingId = MAX_BOOKING_ID++;
     }
 
-    public BookingEntity(long id, String firstName, String secondName, long flightId, int amount) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public BookingEntity(long bookingId, String [] passangers, long flightId) {
+        this.passangers = passangers;
+        this.flightId = flightId;
+        this.bookingId = bookingId;
+    }
+
+    public BookingEntity(long bookingId, long flightId) {
+        this.flightId = flightId;
+        this.bookingId = bookingId;
+    }
+
+
+    public BookingEntity(long id, String [] passangers, long flightId, int amount) {
+        this.passangers = passangers;
         this.flightId = flightId;
         this.amount = amount;
         this.bookingId = id;
     }
 
-    public BookingEntity(String firstName, String secondName, int amount, long flightId) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public BookingEntity(String [] passangers, int amount, long flightId) {
+        this.passangers = passangers;
         this.flightId = flightId;
         this.amount = amount;
     }
 
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
+    public String [] getPassengers() {return passangers;}
 
     public long getFlightId() {
         return flightId;
     }
 
-    public int getAmount () { return amount;}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BookingEntity that = (BookingEntity) o;
-        return flightId == that.flightId && Objects.equals(firstName, that.firstName) && Objects.equals(secondName, that.secondName);
+    public int getAmount() {
+        return amount;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, secondName, flightId);
+    public long getBookingId() {
+        return bookingId;
+    }
+
+    public void setPassengers(String[] passangers) {this.passangers = passangers;
     }
 
     @Override
     public String toString() {
-        return "First name: '%s' || Second name: '%s' || "
-                .formatted(firstName, secondName);
+        return "passangers=" + passangers.toString() +
+                ", flightId=" + flightId +
+                ", amount=" + amount +
+                ", bookingId=" + bookingId +
+                '}';
     }
 }

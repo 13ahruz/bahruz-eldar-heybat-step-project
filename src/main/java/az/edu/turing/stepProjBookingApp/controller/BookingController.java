@@ -12,16 +12,15 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    public boolean bookAReservation(String firstName, String secondName, long flightId, int amount) {
-        return bookingService.bookAReservation(firstName, secondName, flightId, amount);
+    public boolean bookAReservation(String [] passangers, long flightId) {
+        return bookingService.bookAReservation(passangers, flightId);
     }
 
-    public boolean cancelAReservation(String firstName, String secondName, long id) {
-        return bookingService.cancelAReservation(firstName, secondName, id);
+    public void cancelAReservation(long bookingId) {
+        bookingService.cancelAReservation(bookingId);
     }
 
-    public List<BookingEntity> getMyReservations(String firstName, String secondName) {
-        return bookingService.getMyReservations(firstName, secondName);
+    public List<BookingEntity> getMyReservations(String passengerName) {
+        return bookingService.getMyReservations(passengerName);
     }
-
 }

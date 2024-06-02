@@ -31,6 +31,7 @@ public class FlightPostgresDao extends FlightDao implements JdbcConnect {
         }
     }
 
+
     @Override
     public List<FlightEntity> getAll() {
         String getAll = "SELECT * FROM flights";
@@ -39,29 +40,38 @@ public class FlightPostgresDao extends FlightDao implements JdbcConnect {
             PreparedStatement query = conn.prepareStatement(getAll);
             ResultSet resultSet = query.executeQuery();
             while (resultSet.next()) {
-                int seat = resultSet.getInt("seats");
-                LocalDateTime dateAndTime = resultSet.getTimestamp("date_and_time").toLocalDateTime();
-                String location = resultSet.getString("location");
-                String destination = resultSet.getString("destination");
-                flightEntities.add(new FlightEntity(seat, dateAndTime, location, destination));
+                FlightEntity flightEntity = new FlightEntity(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("seats"),
+                        resultSet.getTimestamp("date_and_time").toLocalDateTime(),
+                        resultSet.getString("location"),
+                        resultSet.getString("destination"));
+                flightEntities.add(flightEntity);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return flightEntities;
     }
 
+
     @Override
     public Optional<FlightEntity> getOneBy(Predicate<FlightEntity> predicate) {
-        String getOneBySql = "SELECT FROM flights WHERE id = ?";
+        String getOneBySql = "SELECT * FROM flights";
         try (Connection conn = getConnection()) {
             PreparedStatement statement = conn.prepareStatement(getOneBySql);
             ResultSet resultSet = statement.executeQuery();
-            return Optional.of(new FlightEntity(
-                    resultSet.getInt("seats"),
-                    resultSet.getTimestamp("date_and_time").toLocalDateTime(),
-                    resultSet.getString("location"),
-                    resultSet.getString("destination")));
+            while (resultSet.next()) {
+                FlightEntity flightEntity = new FlightEntity(
+                        resultSet.getInt("id"),
+                        resultSet.getInt("seats"),
+                        resultSet.getTimestamp("date_and_time").toLocalDateTime(),
+                        resultSet.getString("location"),
+                        resultSet.getString("destination"));
+                if (predicate.test(flightEntity)) {
+                    return Optional.of(flightEntity);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,13 +81,13 @@ public class FlightPostgresDao extends FlightDao implements JdbcConnect {
     @Override
     public List<FlightEntity> getAllBy(Predicate<FlightEntity> predicate) {
         List<FlightEntity> flightEntities = new ArrayList<>();
-        String getAllBySql = "SELECT id, firstname, lastname, amount, flightId FROM flights";
+        String getAllBySql = "SELECT * FROM flights";
         try (Connection conn = getConnection()) {
             PreparedStatement statement = conn.prepareStatement(getAllBySql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 FlightEntity flightEntity = new FlightEntity(
-                        resultSet.getLong("id"),
+                        resultSet.getInt("id"),
                         resultSet.getInt("seats"),
                         resultSet.getTimestamp("date_and_time").toLocalDateTime(),
                         resultSet.getString("location"),
@@ -90,6 +100,67 @@ public class FlightPostgresDao extends FlightDao implements JdbcConnect {
             e.printStackTrace();
         }
         return flightEntities;
+    }
+
+    @Override
+    public void update(long flightId, int seats) {
+        String getSeatsSql = "SELECT seats FROM flights WHERE id = ?";
+        String updateSql = "UPDATE flights SET seats = ? WHERE id = ?";
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            int currentSeats;
+            try (PreparedStatement getSeatsStatement = conn.prepareStatement(getSeatsSql)) {
+                getSeatsStatement.setLong(1, flightId);
+                ResultSet resultSet = getSeatsStatement.executeQuery();
+                if (resultSet.next()) {
+                    currentSeats = resultSet.getInt("seats");
+                } else {
+                    throw new SQLException("Flight with ID " + flightId + " not found.");
+                }
+            }
+
+            int newSeats = currentSeats + seats;
+
+            try (PreparedStatement updateStatement = conn.prepareStatement(updateSql)) {
+                updateStatement.setInt(1, newSeats);
+                updateStatement.setLong(2, flightId);
+                updateStatement.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException rollbackException) {
+                    rollbackException.printStackTrace();
+                }
+            }
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void delete(long id) {
+        String deleteSql = "DELETE FROM flights WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement statement = conn.prepareStatement(deleteSql)) {
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

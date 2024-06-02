@@ -5,9 +5,9 @@ import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
 import java.util.List;
 
 public interface BookingService {
-    boolean bookAReservation(String firstName, String secondName, long flightId, int amount);
+    boolean bookAReservation(String [] passengers, long flightId);
 
-    boolean cancelAReservation(String firstName, String secondName, long id);
+    void cancelAReservation(long bookingId);
 
-    List<BookingEntity> getMyReservations(String firstName, String secondName);
+    List<BookingEntity> getMyReservations(String passengerName);
 }

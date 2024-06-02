@@ -16,10 +16,12 @@ import az.edu.turing.stepProjBookingApp.service.BookingService;
 import az.edu.turing.stepProjBookingApp.service.FlightService;
 import az.edu.turing.stepProjBookingApp.service.impl.BookingServiceImpl;
 import az.edu.turing.stepProjBookingApp.service.impl.FlightServiceImpl;
+import az.edu.turing.stepProjBookingApp.util.DatabaseUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,22 +35,22 @@ public class BookingManagementApp {
     private static final FlightController flightController = new FlightController(flightService);
     private static final BookingService bookingService = new BookingServiceImpl(bookingDao, flightDao);
     private static final BookingController bookingController = new BookingController(bookingService);
+    private static final DatabaseUtils databaseUtils = new DatabaseUtils();
 
     public static void main(String[] args) {
+        databaseUtils.resetAll();
         FlightDto flight1 = new FlightDto(
-                LocalDateTime.of(2024, 5, 13, 10, 30), "Kiev", "Baku", 15);
+                LocalDateTime.of(2024, 6, 3, 10, 30), "Kiev", "Baku", 15);
         FlightDto flight2 = new FlightDto(
-                LocalDateTime.of(2024, 5, 13, 11, 30), "Kiev", "Salyan", 13);
+                LocalDateTime.of(2024, 6, 3, 8, 30), "Kiev", "Salyan", 13);
         FlightDto flight3 = new FlightDto(
-                LocalDateTime.of(2024, 5, 13, 12, 30), "London", "Bilasuvar republic", 2);
+                LocalDateTime.of(2024, 6, 3, 7, 30), "London", "Bilasuvar republic", 2);
         flightController.createFlight(flight1);
         flightController.createFlight(flight2);
         flightController.createFlight(flight3);
         while (true) {
             displayMenu();
             int choice = readIntChoice();
-            String firstName;
-            String secondName;
             switch (choice) {
                 case 1:
                     System.out.println("Enter your location: ");
@@ -70,41 +72,36 @@ public class BookingManagementApp {
                     break;
                 case 3:
                     try {
-                        System.out.println("Enter your firstname: ");
-                        firstName = readStringChoice();
-                        System.out.println("Enter your second name: ");
-                        secondName = readStringChoice();
+                        System.out.println("Enter the count of tickets: ");
+                        int count = readIntChoice();
+                        String [] passengers = new String[count];
+                        for (int i = 0; i < count; i++) {
+                            System.out.println("Enter " + i + ". name: ");
+                            passengers[i] = scanner.next();
+                        }
                         System.out.println("Enter flight id: ");
                         int flightIdForBooking = readIntChoice();
-                        System.out.println("Enter amount a seats for booking: ");
-                        int amount = readIntChoice();
-                        bookingController.bookAReservation(firstName, secondName, flightIdForBooking, amount);
+                        bookingController.bookAReservation(passengers, flightIdForBooking);
                         System.out.println("Booking successful");
                     } catch (NoEnoughSeatsException | NotAValidFlightException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case 4:
-                    System.out.println("Enter your first name: ");
-                    firstName = readStringChoice();
-                    System.out.println("Enter your second name: ");
-                    secondName = readStringChoice();
-                    System.out.println("Enter flight ID for cancellation: ");
+                    System.out.println("Enter booking ID for cancellation: ");
                     int flightIdForCancellation = readIntChoice();
                     try {
-                        bookingController.cancelAReservation(firstName, secondName, flightIdForCancellation);
+                        bookingController.cancelAReservation(flightIdForCancellation);
                         System.out.println("Cancellation successful");
                     } catch (NoSuchReservationException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
                 case 5:
-                    System.out.println("Enter your firstname: ");
-                    firstName = readStringChoice();
-                    System.out.println("Enter your second name: ");
-                    secondName = readStringChoice();
+                    System.out.println("Enter your name: ");
+                    String name = readStringChoice();
                     try {
-                        bookingController.getMyReservations(firstName, secondName).forEach(bookingEntity -> System.out.println(bookingEntity.toString() + flightService.getFlightById(bookingEntity.getFlightId()).get()));
+                        bookingController.getMyReservations(name).forEach(bookingEntity -> System.out.println("Booking ID: " + bookingEntity.getBookingId() + " * " + flightController.getFlightById(bookingEntity.getBookingId()).get().toString()));
                     } catch (NoSuchReservationException e) {
                         System.out.println(e.getMessage());
                     }
