@@ -12,4 +12,8 @@ public interface DAO<T> {
     Optional<T> getOneBy(Predicate<T> predicate);
 
     List<T> getAllBy(Predicate<T> predicate);
+
+    void update (long id, int amount);
+
+    void  delete (long id);
 }

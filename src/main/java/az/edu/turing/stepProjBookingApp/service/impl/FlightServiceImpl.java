@@ -34,38 +34,60 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getAllByLocationIn24Hours(String location) {
-        Predicate<FlightEntity> locationAndDatePredicate = (flight -> flight.getLocation().equalsIgnoreCase(location) && flight.getDateAndTime().isAfter(LocalDateTime.now()) && flight.getDateAndTime().isBefore(LocalDateTime.now().plusHours(24)));
+        Predicate<FlightEntity> locationAndDatePredicate = (flight ->
+                flight.getLocation().equalsIgnoreCase(location) &&
+                        flight.getDateAndTime().isAfter(LocalDateTime.now()) &&
+                        flight.getDateAndTime().isBefore(LocalDateTime.now().plusHours(24))
+        );
+
         List<FlightEntity> flights = flightDao.getAll();
-        flights = flights.stream().filter(locationAndDatePredicate).toList();
-        return flights.stream()
-                .map(flight -> new FlightDto(flight.getDateAndTime(), flight.getLocation(), flight.getDestination(), flight.getSeats(), flight.getFlightId()))
+        List<FlightEntity> filteredFlights = flights.stream()
+                .filter(locationAndDatePredicate)
+                .collect(Collectors.toList());
+
+        return filteredFlights.stream()
+                .map(flight -> new FlightDto(
+                        flight.getDateAndTime(),
+                        flight.getLocation(),
+                        flight.getDestination(),
+                        flight.getSeats(),
+                        flight.getFlightId()))
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public Optional<FlightDto> getFlightById(long id) {
-        Predicate<FlightEntity> predicateById = flight -> flight.getFlightId() == id;
-        Optional<FlightEntity> flightById = flightDao.getOneBy(predicateById);
-        if (flightById.isPresent()) {
-            FlightEntity flightEntity = flightById.get();
-            FlightDto flightDto = new FlightDto(flightEntity.getDateAndTime(), flightEntity.getLocation(), flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId());
-            return Optional.of(flightDto);
-        } else {
+        try {
+            Predicate<FlightEntity> predicateById = flight -> flight.getFlightId() == id;
+            Optional<FlightEntity> flightById = flightDao.getOneBy(predicateById);
+            return flightById.map(flightEntity ->
+                    new FlightDto(flightEntity.getDateAndTime(), flightEntity.getLocation(),
+                            flightEntity.getDestination(), flightEntity.getSeats(), flightEntity.getFlightId()));
+        } catch (Exception e) {
+            e.printStackTrace();
             return Optional.empty();
         }
     }
 
-
     @Override
     public boolean createFlight(FlightDto flightDto) {
+        Predicate<FlightEntity> flightPredicate = flightEntity ->
+                flightEntity.getDateAndTime().equals(flightDto.getDateAndTime()) &&
+                        flightEntity.getLocation().equals(flightDto.getLocation()) &&
+                        flightEntity.getDestination().equals(flightDto.getDestination());
+
+        Optional<FlightEntity> existingFlight = flightDao.getOneBy(flightPredicate);
+        if (existingFlight.isPresent()) {
+            return false;
+        }
+
         FlightEntity flightEntity = new FlightEntity(
                 flightDto.getDateAndTime(),
                 flightDto.getLocation(),
                 flightDto.getDestination(),
                 flightDto.getSeats()
         );
-        List<FlightEntity> flights = new ArrayList<>();
-        flights.add(flightEntity);
-        return flightDao.save(flights);
+        return flightDao.save(List.of(flightEntity));
     }
 }

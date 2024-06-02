@@ -82,4 +82,12 @@ public class FlightFileDao extends FlightDao {
         }
         return new ArrayList<>();
     }
+
+    @Override
+    public void delete(long id) {
+    }
+
+    @Override
+    public void update(long id, int amount) {
+    }
 }
