@@ -2,7 +2,6 @@ package az.edu.turing.stepProjBookingApp.dao.impl;
 
 import az.edu.turing.stepProjBookingApp.dao.BookingDao;
 import az.edu.turing.stepProjBookingApp.model.entity.BookingEntity;
-import az.edu.turing.stepProjBookingApp.util.DatabaseUtils;
 
 import java.sql.*;
 import java.util.*;
@@ -224,7 +223,7 @@ public class BookingPostgresDao extends BookingDao implements JdbcConnect {
 
 
     @Override
-    public Connection getConnection (){
+    public Connection getConnection() {
         return JdbcConnect.super.getConnection();
     }
 }
