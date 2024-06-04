@@ -8,11 +8,11 @@ public interface JdbcConnect {
     final String url = "jdbc:postgresql://localhost:5432/postgres";
     final String user = "postgres";
     final String password = "postgres";
-    default Connection getConnection (){
+
+    default Connection getConnection() {
         try {
             return DriverManager.getConnection(url, user, password);
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
