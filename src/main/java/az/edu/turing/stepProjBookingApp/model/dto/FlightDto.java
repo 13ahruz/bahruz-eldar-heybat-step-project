@@ -79,7 +79,7 @@ public class FlightDto {
 
     @Override
     public String toString() {
-        return "Flight ID: %d * Fly date: %s * Destination: '%s' * Seats: %d}"
-                .formatted(flightId, dateAndTime, destination, seats);
+        return String.format("Flight ID: %d * Fly date: %s * Destination: '%s' * Seats: %d",
+                flightId, dateAndTime, destination, seats);
     }
 }

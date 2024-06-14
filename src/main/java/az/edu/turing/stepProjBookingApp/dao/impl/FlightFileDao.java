@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FlightFileDao extends FlightDao {
     private static final String RESOURCE_PATH = "src/main/java/az/edu/turing/stepProjBookingApp/resource/";
@@ -44,7 +45,7 @@ public class FlightFileDao extends FlightDao {
             byte[] jsonData = Files.readAllBytes(Paths.get(FLIGHT_FILE_PATH));
             List<FlightEntity> allFlights = objectMapper.readValue(jsonData, new TypeReference<List<FlightEntity>>() {
             });
-            return allFlights.stream().filter(predicate).toList();
+            return allFlights.stream().filter(predicate).collect(Collectors.toList());
         } catch (IOException e) {
             System.out.println("Error while loading flights from file: " + e.getMessage());
         }

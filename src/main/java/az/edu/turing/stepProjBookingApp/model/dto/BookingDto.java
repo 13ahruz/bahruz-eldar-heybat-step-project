@@ -43,7 +43,7 @@ public class BookingDto {
 
     @Override
     public String toString() {
-        return "First name: '%s' || Second name: '%s' || "
-                .formatted(firstName, secondName);
+        return String.format("First name: '%s' || Second name: '%s' || ",
+                firstName, secondName);
     }
 }
